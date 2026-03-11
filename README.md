@@ -14,8 +14,7 @@ https://github.com/molnarmark888-sketch/zenei_idovonal.git
 
 # GIT mentes, push - olas
 - git add .
-- git commit -m "Hello"
-- git branch -M main
+- git commit -m "Hello2"
 - git push -u origin main
 
 # GIT letoltese
