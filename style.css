@@ -1,0 +1,28 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+    background: radial-gradient(circle, #0a0e20 0%, #050816 100%);
+    overflow: hidden; 
+    font-family: 'Courier New', monospace; 
+}
+canvas { display: block; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 1; }
+.hidden { display: none !important; }
+
+.year-label {
+    position: absolute;
+    color: #22d3ee;
+    font-weight: 900;
+    text-shadow: 0 0 25px #00ffff;
+    font-size: 3.5rem;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 40;
+}
+
+.menu-back-button { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.menu-dot { width: 10px; height: 10px; background-color: #22d3ee; border-radius: 50%; box-shadow: 0 0 15px #22d3ee; transition: 0.3s; }
+.menu-back-button:hover .menu-dot { transform: scale(1.5); background-color: #fff; }
+.menu-text { color: #22d3ee; font-weight: 900; letter-spacing: 0.4em; font-size: 14px; opacity: 0.6; }
+.menu-back-button:hover .menu-text { opacity: 1; color: #fff; }
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }

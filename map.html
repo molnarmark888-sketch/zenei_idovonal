@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenei Idővonal // Spaceship Flight</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body class="bg-[#050816] m-0 overflow-hidden font-mono text-cyan-400">
+
+    <div id="search-container" class="fixed top-0 left-0 w-full flex justify-between items-center p-4 z-50 opacity-30 hover:opacity-100 focus-within:opacity-100 bg-gradient-to-b from-cyan-900/20 to-transparent border-b border-cyan-500/10 transition-all duration-500">
+        <div class="flex items-center gap-4 flex-1">
+            <a href="menu.html" class="menu-back-button flex items-center gap-3 no-underline group">
+                <span class="menu-dot"></span>
+                <span class="menu-text">MENU</span>
+            </a>
+        </div>
+        <div class="flex justify-center gap-2 flex-1">
+            <input type="number" id="music-search" placeholder="ÉV..." class="bg-cyan-950/20 border border-cyan-500/30 text-cyan-400 p-2 rounded outline-none w-32 focus:border-cyan-400 transition-all">
+            <button id="search-button" class="bg-cyan-400 text-black px-6 py-2 font-bold hover:shadow-[0_0_20px_#22d3ee] transition-all [clip-path:polygon(10%_0,100%_0,90%_100%,0_100%)]">UTAZÁS</button>
+        </div>
+        <div class="flex-1 text-right text-[10px] tracking-widest opacity-40 uppercase">FBX Engine Active</div>
+    </div>
+
+    <div id="labels" class="fixed top-0 left-0 w-full h-full pointer-events-none z-40"></div>
+
+    <script type="importmap">
+        { 
+            "imports": { 
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            } 
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+    <script type="module" src="./app.js"></script>
+</body>
+</html>

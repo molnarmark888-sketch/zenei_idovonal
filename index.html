@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Zenei Idővonal // Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+    <link rel="stylesheet" href="menu-style.css">
+</head>
+<body class="bg-black text-white overflow-x-hidden overscroll-none">
+
+    <div id="canvas-container">
+        <canvas id="bg-canvas"></canvas>
+        
+        <div id="video-tape-container">
+            <div id="video-tape">
+                <div class="tape-item"><video src="vidi1.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi2.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi3.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi4.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi6.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi6.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi7.mp4" autoplay muted loop playsinline></video></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="scroll-wrapper">
+        <section id="title-section">
+            <div id="title-circle-wrapper">
+                <h1 id="main-title">ZENEI<br>IDŐVONAL</h1>
+                <p id="scroll-hint" class="animate-bounce text-cyan-400">Molnár Márk BA3</p>
+            </div>
+        </section>
+        <div class="spacer"></div>
+    </div>
+
+    <script type="importmap">
+        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+    </script>
+    <script type="module" src="app2.js"></script>
+</body>
+</html>
