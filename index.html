@@ -2,7 +2,8 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <title>Zenei Idővonal // Home2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenei Idővonal // Boombox</title>
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -10,37 +11,37 @@
     <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
     <link rel="stylesheet" href="css/menu-style.css">
 </head>
-<body class="bg-black text-white overflow-x-hidden overscroll-none">
+<body class="bg-black text-white overflow-x-hidden">
+
+    <nav id="top-nav" class="fixed top-5 left-1/2 z-[100] -translate-x-1/2 translate-y-[-150%] transition-all duration-500 ease-out opacity-5 hover:opacity-100">
+        <div class="flex gap-2 py-2 px-5 bg-black/30 backdrop-blur-md border border-cyan-500/10 rounded-full shadow-[0_0_20px_rgba(0,255,255,0.03)]">
+            <a href="index.html" class="nav-link text-white hover:text-cyan-400 px-3 py-1 transition-colors uppercase text-[10px] tracking-widest rounded-full">Kezdőlap</a>
+            <div class="w-px h-5 bg-cyan-500/10 self-center"></div>
+            <a href="map.html" class="nav-link text-white hover:text-cyan-400 px-3 py-1 transition-colors uppercase text-[10px] tracking-widest rounded-full">Időutazás (Map)</a>
+        </div>
+    </nav>
 
     <div id="canvas-container">
         <canvas id="bg-canvas"></canvas>
-        
         <div id="video-tape-container">
             <div id="video-tape">
-                <div class="tape-item"><video src="video/vidi1.mp4" autoplay muted loop playsinline></video></div>
-                <div class="tape-item"><video src="video/vidi2.mp4" autoplay muted loop playsinline></video></div>
-                <div class="tape-item"><video src="video/vidi3.mp4" autoplay muted loop playsinline></video></div>
-                <div class="tape-item"><video src="video/vidi4.mp4" autoplay muted loop playsinline></video></div>
-                <div class="tape-item"><video src="video/vidi5.mp4" autoplay muted loop playsinline></video></div>
-                <div class="tape-item"><video src="video/vidi6.mp4" autoplay muted loop playsinline></video></div>
-                <div class="tape-item"><video src="video/vidi7.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi1.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi2.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi3.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi4.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi5.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi6.mp4" autoplay muted loop playsinline></video></div>
+                <div class="tape-item"><video src="vidi7.mp4" autoplay muted loop playsinline></video></div>
             </div>
         </div>
     </div>
 
     <div id="scroll-wrapper">
-        <section id="title-section">
-            <div id="title-circle-wrapper">
-                <h1 id="main-title">ZENEI<br>IDŐVONAL</h1>
-                <p id="scroll-hint" class="animate-bounce text-cyan-400">Molnár Márk BA3</p>
-            </div>
-        </section>
+        <section id="title-section"><h1 id="main-title">ZENEI<br>IDŐVONAL</h1></section>
         <div class="spacer"></div>
     </div>
 
-    <script type="importmap">
-        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
-    </script>
+    <script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }</script>
     <script type="module" src="js/app2.js"></script>
 </body>
 </html>
