@@ -7,7 +7,7 @@ https://github.com/molnarmark888-sketch/zenei_idovonal.git
 - git init
 - git add README.md
 - git add .
-- git commit -m "first commit"
+- git commit -m "Hello"
 - git branch -M main
 - git remote add origin https://github.com/molnarmark888-sketch/zenei_idovonal.git
 - git push -u origin main
