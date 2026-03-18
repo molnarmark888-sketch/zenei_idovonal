@@ -11,8 +11,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
-const labelsContainer = document.getElementById('labels');
-
 // --- 2. HANGOK ---
 const listener = new THREE.AudioListener();
 camera.add(listener);
@@ -94,7 +92,7 @@ playerGroup.add(fireTrail);
 playerGroup.visible = false;
 scene.add(playerGroup);
 
-// --- 6. LOGIKA ÉS PORTÁLOK ---
+// --- 6. LOGIKA ÉS PORTÁLOK (Labels nélkül!) ---
 const player = { velocity: new THREE.Vector3(), acceleration: 3.2, deceleration: 0.95, maxSpeed: 45 };
 const dimensions = [];
 const yearsData = [1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020];
@@ -107,12 +105,8 @@ yearsData.forEach((year, i) => {
     portal.add(gate);
     scene.add(portal);
 
-    const label = document.createElement('div');
-    label.className = 'year-label hidden';
-    label.textContent = year;
-    labelsContainer.appendChild(label);
-    
-    dimensions.push({ group: portal, mesh: gate, label: label, z: portal.position.z });
+    // KISZEDVE: Itt volt a label létrehozása, ami a bal felsőbe ragadt
+    dimensions.push({ group: portal, mesh: gate, z: portal.position.z });
 });
 
 scene.add(new THREE.AmbientLight(0xffffff, 0.5));
@@ -120,7 +114,7 @@ camera.position.set(0, 5000, 10000);
 
 let phase = "WAIT"; 
 let hyperSpeed = 0;
-let isJumping = false; // Átmenet figyelése
+let isJumping = false; 
 const keys = {};
 
 // --- 7. INDÍTÁS ---
@@ -172,7 +166,6 @@ function animate() {
         playerGroup.position.add(player.velocity);
         player.velocity.multiplyScalar(player.deceleration);
 
-        // Falak (Tube) korlátja
         const distFromCenter = Math.sqrt(playerGroup.position.x**2 + playerGroup.position.y**2);
         if (distFromCenter > tubeRadius - 350) {
             const angle = Math.atan2(playerGroup.position.y, playerGroup.position.x);
@@ -180,7 +173,6 @@ function animate() {
             playerGroup.position.y = Math.sin(angle) * (tubeRadius - 350);
         }
 
-        // Hajó láng effekt
         const pos = fireTrail.geometry.attributes.position.array;
         const col = fireTrail.geometry.attributes.color.array;
         for (let i = 0; i < particleCount; i++) {
@@ -196,32 +188,20 @@ function animate() {
         camera.position.lerp(playerGroup.position.clone().add(new THREE.Vector3(0, 950, 2900)), 0.1);
         camera.lookAt(playerGroup.position.x, playerGroup.position.y - 150, playerGroup.position.z - 1000);
 
-        // --- ÜTKÖZÉS ÉS ÁTIRÁNYÍTÁS ---
-        dimensions.forEach((dim, idx) => {
-            // Label frissítése
-            const vec = dim.group.position.clone().add(new THREE.Vector3(0, 800, 0)).project(camera);
-            if (vec.z < 1) {
-                dim.label.classList.remove('hidden');
-                dim.label.style.left = `${(vec.x * 0.5 + 0.5) * window.innerWidth}px`;
-                dim.label.style.top = `${(vec.y * -0.5 + 0.5) * window.innerHeight}px`;
-            } else {
-                dim.label.classList.add('hidden');
-            }
+        // KISZEDVE: Az animate-ből is kitöröltem a label pozícionáló részt
 
-            // Portál ütközés detektálása (distanceTo)
+        dimensions.forEach((dim, idx) => {
             const distToPortal = playerGroup.position.distanceTo(dim.group.position);
             
             if (distToPortal < 350 && !isJumping) {
                 isJumping = true;
                 const targetYear = yearsData[idx];
 
-                // Vast Space fehéredés effekt
                 const overlay = document.createElement('div');
                 overlay.style.cssText = "position:fixed; inset:0; background:white; z-index:1000; opacity:0; transition: opacity 0.5s ease; pointer-events:none;";
                 document.body.appendChild(overlay);
 
                 setTimeout(() => overlay.style.opacity = "1", 10);
-
                 setTimeout(() => {
                     window.location.href = `era.html?year=${targetYear}`;
                 }, 600);
@@ -231,3 +211,9 @@ function animate() {
     renderer.render(scene, camera);
 }
 animate();
+
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});

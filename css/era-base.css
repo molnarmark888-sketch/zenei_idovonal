@@ -1,20 +1,9 @@
 /* era-base.css */
-* { box-sizing: border-box; }
-
-body {
-    scrollbar-width: none;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { scrollbar-width: none; -ms-overflow-style: none; background: #050816; }
 body::-webkit-scrollbar { display: none; }
 
-#data-stream-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-}
+#data-stream-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
 .year-outline {
     font-family: 'Audiowide', sans-serif;
@@ -22,21 +11,11 @@ body::-webkit-scrollbar { display: none; }
     text-shadow: 0 0 30px rgba(34, 211, 238, 0.2);
 }
 
-#main-visual-container {
-    transition: transform 0.1s ease-out;
-}
+#logo-svg-container svg { filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.5)); }
 
-#media-container {
-    box-shadow: 0 50px 150px rgba(0,0,0,0.9);
-}
+.back-link { color: #22d3ee; }
 
-.back-btn {
-    color: #22d3ee;
-    font-family: 'Audiowide', sans-serif;
-}
-
-/* Különböző képernyőméretekhez */
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
     .era-grid-container { grid-template-columns: 1fr; }
-    #year-display { font-size: 8rem; }
+    #year-display { font-size: 6rem; }
 }

@@ -7,6 +7,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="c/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <style>
+        /* Panel egyedi stílusai, amik nem fértek bele a Tailwindbe */
+        #side-panel {
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .era-item span:last-child {
+            font-family: 'Audiowide', sans-serif;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .era-item:hover span:last-child {
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+        }
+        #side-panel:hover {
+            right: 0 !important;
+        }
+    </style>
 </head>
 <body class="bg-[#050816] m-0 overflow-hidden font-mono text-cyan-400">
 
@@ -31,6 +50,48 @@
         <div class="flex-1 text-right text-[9px] tracking-[0.4em] opacity-20 uppercase">Nav-System v3.0</div>
     </div>
 
+    <div id="side-panel" class="fixed right-[-210px] top-1/2 -translate-y-1/2 w-64 h-[75vh] z-[60] flex transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
+        
+        <div class="w-10 h-full flex items-center justify-center cursor-pointer bg-cyan-950/30 backdrop-blur-md border-l border-y border-cyan-500/30 rounded-l-2xl">
+            <span class="rotate-180 text-[9px] tracking-[0.6em] font-bold uppercase text-cyan-400 [writing-mode:vertical-lr] opacity-50">Chronology</span>
+        </div>
+
+        <div class="flex-1 bg-black/60 backdrop-blur-xl border border-cyan-500/20 p-8 overflow-y-auto scrollbar-hide">
+            <div class="text-[8px] tracking-[0.4em] text-cyan-500/40 uppercase mb-10 border-b border-cyan-500/10 pb-2">Timeline</div>
+            
+            <ul id="era-list" class="space-y-8">
+                <li class="era-item group cursor-pointer" data-year="1900">
+                    <span class="text-[10px] text-cyan-500/30 group-hover:text-cyan-400 block mb-1">01</span>
+                    <span class="text-3xl font-black italic tracking-tighter text-white/70 group-hover:text-cyan-400 group-hover:translate-x-3 transition-all inline-block">1900</span>
+                </li>
+                <li class="era-item group cursor-pointer" data-year="1920">
+                    <span class="text-[10px] text-cyan-500/30 group-hover:text-cyan-400 block mb-1">02</span>
+                    <span class="text-3xl font-black italic tracking-tighter text-white/70 group-hover:text-cyan-400 group-hover:translate-x-3 transition-all inline-block">1920</span>
+                </li>
+                <li class="era-item group cursor-pointer" data-year="1940">
+                    <span class="text-[10px] text-cyan-500/30 group-hover:text-cyan-400 block mb-1">03</span>
+                    <span class="text-3xl font-black italic tracking-tighter text-white/70 group-hover:text-cyan-400 group-hover:translate-x-3 transition-all inline-block">1940</span>
+                </li>
+                <li class="era-item group cursor-pointer" data-year="1960">
+                    <span class="text-[10px] text-cyan-500/30 group-hover:text-cyan-400 block mb-1">04</span>
+                    <span class="text-3xl font-black italic tracking-tighter text-white/70 group-hover:text-cyan-400 group-hover:translate-x-3 transition-all inline-block">1960</span>
+                </li>
+                <li class="era-item group cursor-pointer" data-year="1980">
+                    <span class="text-[10px] text-cyan-500/30 group-hover:text-cyan-400 block mb-1">05</span>
+                    <span class="text-3xl font-black italic tracking-tighter text-white/70 group-hover:text-cyan-400 group-hover:translate-x-3 transition-all inline-block">1980</span>
+                </li>
+                <li class="era-item group cursor-pointer" data-year="2000">
+                    <span class="text-[10px] text-cyan-500/30 group-hover:text-cyan-400 block mb-1">06</span>
+                    <span class="text-3xl font-black italic tracking-tighter text-white/70 group-hover:text-cyan-400 group-hover:translate-x-3 transition-all inline-block">2000</span>
+                </li>
+                <li class="era-item group cursor-pointer" data-year="2020">
+                    <span class="text-[10px] text-cyan-500/30 group-hover:text-cyan-400 block mb-1">07</span>
+                    <span class="text-3xl font-black italic tracking-tighter text-white/70 group-hover:text-cyan-400 group-hover:translate-x-3 transition-all inline-block">2020</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <div id="labels" class="fixed top-0 left-0 w-full h-full pointer-events-none z-40"></div>
 
     <script type="importmap">
@@ -43,5 +104,15 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
     <script type="module" src="js/app.js"></script>
+    
+    <script>
+        document.querySelectorAll('.era-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const year = item.getAttribute('data-year');
+                document.getElementById('music-search').value = year;
+                document.getElementById('search-button').click(); // Szimulálja az utazás gombot
+            });
+        });
+    </script>
 </body>
 </html>

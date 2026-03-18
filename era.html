@@ -3,22 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chrono Boom // Archive Experience</title>
+    <title>Chrono Boom // Era Experience</title>
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="c/era-base.css">
     <link id="dynamic-style" rel="stylesheet" href="">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { corePlugins: { preflight: false } }</script>
 </head>
-<body id="body-content" class="bg-[#050816] m-0 font-mono text-cyan-400 overflow-x-hidden">
+<body id="body-content" class="bg-[#050816] m-0 font-mono text-cyan-400 overflow-x-hidden opacity-0 transition-opacity duration-1000">
 
-    <canvas id="data-stream-canvas"></canvas>
+    <canvas id="data-stream-canvas" class="fixed top-0 left-0 w-full h-full z-0"></canvas>
 
-    <div id="main-wrapper">
-        
+    <div id="scroll-wrapper">
         <section id="hero-section" class="h-screen w-full flex items-center justify-center sticky top-0 z-20">
-            <div id="main-visual-container" class="w-[65vw] aspect-video border border-cyan-500/20 bg-black overflow-hidden shadow-[0_0_100px_rgba(0,255,255,0.1)]">
-                <img src="assets/intro-visual.jpg" id="hero-img" class="w-full h-full object-cover opacity-80 scale-110" alt="Kezdő Kép">
+            
+            <div id="logo-svg-container" class="absolute z-30 pointer-events-none">
+                <svg width="600" height="160" viewBox="0 0 600 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g stroke="#22d3ee" stroke-width="2.5" fill="none" class="chrono-boom-path">
+                        <path d="M60 55 H 35 V 105 H 60"/>
+                        <path d="M85 55 V 105 M 85 80 H 110 M 110 55 V 105"/>
+                        <path d="M135 55 V 105 M 135 55 H 160 C 175 55 175 80 160 80 H 135 M 155 80 L 175 105"/>
+                        <rect x="195" y="55" width="40" height="50"/>
+                        <path d="M260 105 V 55 L 295 105 V 55"/>
+                        <rect x="320" y="55" width="40" height="50"/>
+                        <rect x="390" y="40" width="160" height="90" rx="8"/>
+                        <circle cx="430" cy="85" r="25"/>
+                        <circle cx="510" cy="85" r="25"/>
+                        <path d="M460 40 V 20 H 490 M 465 20 L 460 40"/>
+                    </g>
+                </svg>
+            </div>
+
+            <div id="main-visual-container" class="w-[60vw] aspect-video border border-cyan-500/20 bg-black overflow-hidden shadow-[0_0_80px_rgba(0,255,255,0.1)] opacity-40">
+                <img src="assets/intro-visual.jpg" id="hero-img" class="w-full h-full object-cover scale-110">
             </div>
         </section>
 
@@ -27,16 +44,24 @@
         <section id="final-panel-section" class="h-screen w-full flex items-center justify-center relative z-30 p-[5vw]">
             <div class="era-grid-container grid grid-cols-[1.2fr,0.8fr] gap-[5vw] w-full max-w-[1400px]">
                 
-                <div id="media-container" class="border border-cyan-500/30 bg-black aspect-video relative shadow-2xl">
-                    <iframe id="video-frame" class="w-full h-full border-none" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <div id="media-container" class="aspect-video relative shadow-2xl">
+                    <div id="video-hud" class="absolute inset-[-30px] pointer-events-none z-0">
+                        <svg width="100%" height="100%" viewBox="0 0 1000 600" preserveAspectRatio="none">
+                            <g stroke="#22d3ee" stroke-width="1.5" fill="none" class="hud-path">
+                                <path d="M0 60 V 0 H 60"/> <path d="M940 0 H 1000 V 60"/> <path d="M0 540 V 600 H 60"/> <path d="M940 600 H 1000 V 540"/> <path d="M300 630 H 700" stroke-dasharray="10 10"/> </g>
+                        </svg>
+                    </div>
+
+                    <div class="absolute inset-0 border border-cyan-500/30 bg-black z-10 overflow-hidden">
+                        <iframe id="video-frame" class="w-full h-full border-none" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
                 </div>
 
                 <div class="info-scroll flex flex-col justify-center">
                     <h1 id="year-display" class="year-outline text-[12rem] leading-none mb-4 text-transparent italic font-black">0000</h1>
-                    <h2 id="title-display" class="text-3xl uppercase tracking-[0.5em] text-white mb-6">Korszak Címe</h2>
-                    <div id="text-display" class="text-cyan-200/70 text-lg leading-relaxed mb-10">
-                        </div>
-                    <a href="map.html" class="back-btn self-start border border-cyan-500 px-8 py-3 text-[10px] tracking-[0.4em] uppercase no-underline hover:bg-cyan-500 hover:text-black transition-all">← Back to Space</a>
+                    <h2 id="title-display" class="text-3xl uppercase tracking-[0.5em] text-white mb-6">Betöltés...</h2>
+                    <div id="text-display" class="text-cyan-200/70 text-lg leading-relaxed mb-10"></div>
+                    <a href="map.html" class="back-link self-start border border-cyan-500 px-8 py-3 text-[10px] tracking-[0.4em] uppercase no-underline hover:bg-cyan-500 hover:text-black transition-all">← Back to Space</a>
                 </div>
             </div>
         </section>
