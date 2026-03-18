@@ -1,133 +1,107 @@
+// Adatbázis
 const database = {
-    "1900": {
-        title: "A Fonográf kora",
-        theme: "c/era-1900.css",
-        video: "https://www.youtube.com/embed/S_I8v_p0V_k",
-        text: "<p>A zene rögzítésének hajnala. Ebben az évtizedben a technológia még csak kísérletezett a hang tárolásával.</p><p>Thomas Edison fonográfja és az első hengerek megnyitották az utat a rögzített zene előtt.</p>"
-    },
-    "1910": {
-        title: "A Ragtime Aranykora",
-        theme: "c/era-1910.css",
-        video: "https://www.youtube.com/embed/fPmruHc4S9Q",
-        text: "<p>Scott Joplin és a szinkópás ritmusok világa. A zene kezdett eltávolodni a szigorú klasszikus formáktól.</p><p>A New Orleans-i jazz első csírái megjelentek.</p>"
-    },
-    "1920": {
-        title: "Jazz és Szesztilalom",
-        theme: "c/era-1920.css",
-        video: "https://www.youtube.com/embed/TRgeoo3hS_Y",
-        text: "<p>A 'Roaring Twenties'. A rádió és a hanglemez elterjedése globális sztárokat teremtett.</p><p>A jazz improvizatív jellege alapjaiban változtatta meg a zenei közízlést.</p>"
-    },
-    "1930": {
-        title: "A Swing korszaka",
-        theme: "c/era-1930.css",
-        video: "https://www.youtube.com/embed/r2S1iHsc6fo",
-        text: "<p>A nagy gazdasági világválság idején a Swing Big Bandek adtak reményt az embereknek.</p>"
-    },
-    "1940": {
-        title: "A Bebop születése",
-        theme: "c/era-1940.css",
-        video: "https://www.youtube.com/embed/09BB1pci8_o",
-        text: "<p>A II. világháború után a jazz művészibb és komplexebb lett. Megszületett a Bebop.</p>"
-    },
-    "1950": {
-        title: "Rock 'n' Roll Láz",
-        theme: "c/era-1950.css",
-        video: "https://www.youtube.com/embed/gj0Rz-uP4Mk",
-        text: "<p>Elvis Presley és az elektromos gitár forradalma. A fiatalok saját kultúrát teremtettek.</p>"
-    },
-    "1960": {
-        title: "Pszichedélia és Soul",
-        theme: "c/era-1960.css",
-        video: "https://www.youtube.com/embed/6_Y77vsvI6s",
-        text: "<p>A Beatles, a Rolling Stones és a Motown korszaka. A stúdiótechnika fejlődése új hangzásokat hozott.</p>"
-    },
-    "1970": {
-        title: "Bronx: A Hip-Hop gyökerei",
-        theme: "c/era-1970.css",
-        video: "https://www.youtube.com/embed/PobrSpMwKk4",
-        text: "<p>New York utcáin megszületett valami új: a DJ kultúra, a loopolás és a rap.</p>"
-    },
-    "1980": {
-        title: "Szintetizátorok és MTV",
-        theme: "c/era-1980.css",
-        video: "https://www.youtube.com/embed/YpS8V_wGv8A",
-        text: "<p>A digitális hangszerek és a videóklip korszaka. Michael Jackson és Madonna uralta a listákat.</p>"
-    },
-    "1990": {
-        title: "Aranykor és Grunge",
-        theme: "c/era-1990.css",
-        video: "https://www.youtube.com/embed/XW_N_9xOls4",
-        text: "<p>A Hip-Hop aranykora és a grunge nyers ereje. Tupac, Biggie és a Nirvana korszaka.</p>"
-    },
-    "2000": {
-        title: "A Digitális Áttörés",
-        theme: "c/era-2000.css",
-        video: "https://www.youtube.com/embed/k92yK6vGk8A",
-        text: "<p>Az MP3 és a fájlcserélők kora. A pop és a hip-hop végleg összefonódott.</p>"
-    },
-    "2010": {
-        title: "Streaming és Trap",
-        theme: "c/era-2010.css",
-        video: "https://www.youtube.com/embed/1W9lS90n1H0",
-        text: "<p>A Spotify és a SoundCloud generációja. A Trap ütemek lettek a popzene alapjai.</p>"
-    },
-    "2020": {
-        title: "Modern Dominancia",
-        theme: "c/era-2020.css",
-        video: "https://www.youtube.com/embed/3W_uLvi90Cw",
-        text: "<p>A hip-hop a világ legnépszerűbb műfaja. A zene végtelen adatfolyammá vált.</p>"
-    }
+    "1900": { title: "A Fonográf kora", theme: "c/era-1900.css", video: "https://www.youtube.com/embed/S_I8v_p0V_k", text: "A zene rögzítésének hajnala..." },
+    "1920": { title: "A Jazz Aranykora", theme: "c/era-1920.css", video: "https://www.youtube.com/embed/TRgeoo3hS_Y", text: "A húszas években a zene felszabadult..." },
+    "2020": { title: "Modern Dominancia", theme: "c/era-2020.css", video: "https://www.youtube.com/embed/3W_uLvi90Cw", text: "A digitális éra végtelen adatfolyama..." }
 };
 
 window.onload = () => {
     const params = new URLSearchParams(window.location.search);
-    const year = params.get('year') || "1900";
-    const entry = database[year] || database["1900"];
+    const year = params.get('year') || "1920";
+    const entry = database[year] || database["1920"];
 
-    // 1. Dinamikus CSS betöltése (ez húzza be a külön fájlt)
-    const themeLink = document.getElementById('dynamic-style');
-    if (themeLink) {
-        themeLink.href = entry.theme;
-    }
-
-    // 2. Tartalom betöltése
+    // Adatok betöltése
     document.getElementById('year-display').textContent = year;
-    if(document.getElementById('year-bg')) document.getElementById('year-bg').textContent = year;
     document.getElementById('title-display').textContent = entry.title;
     document.getElementById('text-display').innerHTML = entry.text;
-    document.getElementById('video-frame').src = entry.video + "?autoplay=1&mute=0";
+    document.getElementById('video-frame').src = entry.video + "?autoplay=0&mute=0&rel=0";
+    document.getElementById('dynamic-style').href = entry.theme;
 
-    // 3. Megjelenítés (Fade in)
-    const bodyContent = document.getElementById('body-content');
-    if (bodyContent) {
-        bodyContent.classList.remove('opacity-0');
-    }
-
+    // Funkciók indítása
     initThreeBackground();
+    initScrollAnimations();
 };
 
+// --- GSAP GÖRGETÉSI ANIMÁCIÓ (0:29 -> 0:50) ---
+function initScrollAnimations() {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 1. Hero kép eltorzulása és kizoomolása
+    gsap.to("#main-visual-container", {
+        scrollTrigger: {
+            trigger: "#hero-section",
+            start: "top top",
+            end: "bottom top",
+            scrub: true
+        },
+        scale: 0.5,
+        opacity: 0,
+        filter: "blur(20px)",
+        y: -100
+    });
+
+    // 2. Végső panel beúsztatása
+    gsap.from("#final-panel-section", {
+        scrollTrigger: {
+            trigger: "#final-panel-section",
+            start: "top bottom",
+            end: "center center",
+            scrub: true
+        },
+        y: 300,
+        opacity: 0,
+        scale: 0.8
+    });
+}
+
+// --- THREE.JS VÍZ-TORZÍTÁS HÁTTÉR ---
 function initThreeBackground() {
     const canvas = document.getElementById('data-stream-canvas');
-    if (!canvas) return;
-
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const geo = new THREE.BufferGeometry();
-    const pos = new Float32Array(1000 * 3);
-    for(let i=0; i<3000; i++) pos[i] = (Math.random()-0.5) * 100;
-    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    
-    const points = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0x22d3ee, size: 0.1 }));
-    scene.add(points);
-    camera.position.z = 50;
+    const mouse = new THREE.Vector2(0.5, 0.5);
+    const targetMouse = new THREE.Vector2(0.5, 0.5);
 
-    function anim() { 
-        requestAnimationFrame(anim); 
-        points.rotation.y += 0.001; 
-        renderer.render(scene, camera); 
+    const fragmentShader = `
+        uniform float uTime;
+        uniform vec2 uMouse;
+        varying vec2 vUv;
+        void main() {
+            vec2 uv = vUv;
+            vec2 gridUv = fract(uv * 40.0);
+            float grid = step(0.98, gridUv.x) + step(0.98, gridUv.y);
+            float dist = distance(uv, uMouse);
+            float strength = smoothstep(0.4, 0.0, dist);
+            float wave = sin(dist * 20.0 - uTime * 2.0) * 0.01 * strength;
+            vec3 color = vec3(0.13, 0.82, 0.93);
+            gl_FragColor = vec4(color, grid * 0.15 + strength * 0.05);
+        }
+    `;
+
+    const material = new THREE.ShaderMaterial({
+        uniforms: { uTime: { value: 0 }, uMouse: { value: mouse } },
+        vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }`,
+        fragmentShader,
+        transparent: true
+    });
+
+    scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
+
+    window.addEventListener('mousemove', (e) => {
+        targetMouse.x = e.clientX / window.innerWidth;
+        targetMouse.y = 1.0 - (e.clientY / window.innerHeight);
+    });
+
+    function anim(time) {
+        requestAnimationFrame(anim);
+        mouse.x += (targetMouse.x - mouse.x) * 0.05;
+        mouse.y += (targetMouse.y - mouse.y) * 0.05;
+        material.uniforms.uTime.value = time * 0.001;
+        material.uniforms.uMouse.value = mouse;
+        renderer.render(scene, camera);
     }
-    anim();
+    anim(0);
 }
