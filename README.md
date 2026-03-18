@@ -22,9 +22,9 @@ https://github.com/molnarmark888-sketch/zenei_idovonal.git
 
 # TODO
 - fbx javítás
-- tudjunk belépni
-- menu problem
-- kuldeni/leirni Áronnak - egy hármonegyed oldal nem chatgpt saját megfogalmazás. Miért érdekli Áront ez a site. 
+- tudjunk belépni 
+- menu problem --
+- kuldeni/leirni Áronnak - egy hármonegyed oldal nem chatgpt saját megfogalmazás. Miért érdekli Áront ez a site. ----
 - Készülök egy 5perces megszakítás mentes látványos összegzéssel prezentációval, ahol elmesélem a stacket[fejlesztési környezet, eszközök, toolok pl: git, localhost, live server, ] továbba elmondom ennek a célját a felületnek későbbi sorsát.
 - kesobbi fejlesztesek iranyai
 - naptar idopont: pentek 15:1600  -- szombat 16:17:00 -  vasárnap 16:1800-ig

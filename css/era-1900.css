@@ -1,0 +1,64 @@
+/* era-1900.css */
+
+/* Alapszínek felülírása a testreszabáshoz */
+body.era-1900 {
+    background-color: #1a140f; /* Sötét barna */
+    color: #d4b483; /* Antik arany */
+}
+
+/* A Three.js háttér (a pontok) színe ebben a korszakban legyen bronzos */
+#data-stream-canvas {
+    opacity: 0.3;
+    filter: sepia(100%) hue-rotate(320deg) brightness(0.8);
+}
+
+/* A felugró ablak egyedi stílusa */
+body.era-1900 .glass-panel {
+    background: rgba(25, 20, 15, 0.9);
+    border: 1px solid #8b7355;
+    border-left: 8px solid #8b7355; /* Vastagabb antik szegély */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+}
+
+/* Tipográfia váltás antik stílusra */
+body.era-1900 #year-display {
+    font-family: 'Georgia', serif;
+    color: #e2c293;
+    text-shadow: 3px 3px 0px #000;
+}
+
+body.era-1900 #title-display {
+    font-family: 'Times New Roman', serif;
+    color: #8b7355;
+    text-transform: none;
+    letter-spacing: 0.1em;
+    font-style: italic;
+    border-bottom: 1px solid #8b7355;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* A leírás szövege */
+body.era-1900 .info-scroll p {
+    font-family: 'Georgia', serif;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #c5a36e;
+}
+
+/* Videó keret antikolása */
+body.era-1900 .video-frame {
+    border: 3px solid #8b7355;
+    outline: 10px solid rgba(139, 115, 85, 0.1);
+}
+
+/* Vissza gomb */
+body.era-1900 .back-link {
+    color: #8b7355;
+    border-color: #8b7355;
+}
+
+body.era-1900 .back-link:hover {
+    background-color: #8b7355;
+    color: #1a140f;
+}

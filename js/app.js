@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'; 
 import TWEEN from 'https://cdnjs.cloudflare.com/ajax/libs/tween.js/20.0.0/tween.esm.js';
 
-// --- 1. JELENET ---
+// --- 1. JELENET BEÁLLÍTÁSA ---
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000005); 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 200000);
@@ -34,9 +34,9 @@ for(let i=0; i<starCount; i++) {
     starPos[i*3+1] = (Math.random() - 0.5) * 60000;
     starPos[i*3+2] = (Math.random() - 0.5) * 250000;
     const mix = Math.random();
-    starCols[i*3] = 0.8 + mix * 0.2;     
-    starCols[i*3+1] = 0.8 + mix * 0.2;   
-    starCols[i*3+2] = 1.0;               
+    starCols[i*3] = 0.8 + mix * 0.2; 
+    starCols[i*3+1] = 0.8 + mix * 0.2; 
+    starCols[i*3+2] = 1.0; 
 }
 starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
 starGeo.setAttribute('color', new THREE.BufferAttribute(starCols, 3));
@@ -45,13 +45,13 @@ const starMat = new THREE.PointsMaterial({
     size: 5, 
     vertexColors: true,
     transparent: true, 
-    opacity: 0.1, // Alaphelyzetben halvány a küldetés alatt
+    opacity: 0.1, 
     blending: THREE.AdditiveBlending 
 });
 const stars = new THREE.Points(starGeo, starMat);
 scene.add(stars);
 
-// --- 4. FÉREGLYUK (EXTRA ERŐS SZÍNEK) ---
+// --- 4. FÉREGLYUK ---
 const tubeRadius = 2500;
 const tubeLength = 160000;
 const tubeGeo = new THREE.CylinderGeometry(tubeRadius, tubeRadius, tubeLength, 128, 512, true);
@@ -94,7 +94,7 @@ playerGroup.add(fireTrail);
 playerGroup.visible = false;
 scene.add(playerGroup);
 
-// --- 6. LOGIKA ---
+// --- 6. LOGIKA ÉS PORTÁLOK ---
 const player = { velocity: new THREE.Vector3(), acceleration: 3.2, deceleration: 0.95, maxSpeed: 45 };
 const dimensions = [];
 const yearsData = [1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020];
@@ -102,14 +102,16 @@ const yearsData = [1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2
 yearsData.forEach((year, i) => {
     const portal = new THREE.Group();
     portal.position.set((i % 2 ? 1 : -1) * 1200, 0, -i * 7000);
-    const gate = new THREE.Mesh(new THREE.TorusGeometry(450, 30, 16, 100), new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 4 })); // Erősebb emissive a láthatóságért
+    const gate = new THREE.Mesh(new THREE.TorusGeometry(450, 30, 16, 100), new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 4 }));
     gate.rotation.y = Math.PI / 2;
     portal.add(gate);
     scene.add(portal);
+
     const label = document.createElement('div');
     label.className = 'year-label hidden';
     label.textContent = year;
     labelsContainer.appendChild(label);
+    
     dimensions.push({ group: portal, mesh: gate, label: label, z: portal.position.z });
 });
 
@@ -118,15 +120,14 @@ camera.position.set(0, 5000, 10000);
 
 let phase = "WAIT"; 
 let hyperSpeed = 0;
+let isJumping = false; // Átmenet figyelése
 const keys = {};
 
-// --- 7. INDÍTÁS KATTINTÁSRA ---
+// --- 7. INDÍTÁS ---
 window.addEventListener('mousedown', () => {
     if (phase === "WAIT") {
         phase = "HYPER";
         if (warpSound.buffer) warpSound.play();
-        
-        // --- HYPERJUMP ALATT KIVILÁGOSODIK ---
         new TWEEN.Tween(starMat).to({ opacity: 1.0 }, 500).start();
         new TWEEN.Tween({ s: 0 }).to({ s: 2500 }, 1500).easing(TWEEN.Easing.Exponential.In).onUpdate(o => hyperSpeed = o.s).start();
         
@@ -134,10 +135,7 @@ window.addEventListener('mousedown', () => {
             new TWEEN.Tween({ s: 2500 }).to({ s: 0 }, 1500).easing(TWEEN.Easing.Exponential.Out).onUpdate(o => hyperSpeed = o.s).onComplete(() => {
                 phase = "MISSION";
                 warpSound.stop(); if(music.buffer) music.play();
-                
-                // --- MEGÉRKEZÉSKOR LEHALVÁNYUL (0.15), HOGY LÁTSZÓDJANAK A KÖRÖK ---
                 new TWEEN.Tween(starMat).to({ opacity: 0.15 }, 1000).start();
-                
                 playerGroup.visible = true; wormhole.visible = true;
                 playerGroup.position.set(0, 0, 1000);
             }).start();
@@ -160,7 +158,7 @@ function animate() {
     } else {
         stars.position.z += 10; 
         if(stars.position.z > 60000) stars.position.z = -120000;
-        starMat.size = 3; // Kisebb csillagok a küldetés alatt
+        starMat.size = 3;
     }
 
     if(phase === "MISSION") {
@@ -174,16 +172,15 @@ function animate() {
         playerGroup.position.add(player.velocity);
         player.velocity.multiplyScalar(player.deceleration);
 
-        const dist = Math.sqrt(playerGroup.position.x**2 + playerGroup.position.y**2);
-        if (dist > tubeRadius - 350) {
+        // Falak (Tube) korlátja
+        const distFromCenter = Math.sqrt(playerGroup.position.x**2 + playerGroup.position.y**2);
+        if (distFromCenter > tubeRadius - 350) {
             const angle = Math.atan2(playerGroup.position.y, playerGroup.position.x);
             playerGroup.position.x = Math.cos(angle) * (tubeRadius - 350);
             playerGroup.position.y = Math.sin(angle) * (tubeRadius - 350);
         }
 
-        const endZ = -((yearsData.length - 1) * 7000) - 200;
-        if (playerGroup.position.z < endZ) { playerGroup.position.z = endZ; player.velocity.z = 0; }
-
+        // Hajó láng effekt
         const pos = fireTrail.geometry.attributes.position.array;
         const col = fireTrail.geometry.attributes.color.array;
         for (let i = 0; i < particleCount; i++) {
@@ -199,16 +196,36 @@ function animate() {
         camera.position.lerp(playerGroup.position.clone().add(new THREE.Vector3(0, 950, 2900)), 0.1);
         camera.lookAt(playerGroup.position.x, playerGroup.position.y - 150, playerGroup.position.z - 1000);
 
-        const currentIdx = dimensions.findIndex(d => d.z < playerGroup.position.z);
+        // --- ÜTKÖZÉS ÉS ÁTIRÁNYÍTÁS ---
         dimensions.forEach((dim, idx) => {
-            if (idx === currentIdx) {
-                const vec = dim.group.position.clone().add(new THREE.Vector3(0, 800, 0)).project(camera);
-                if (vec.z < 1) {
-                    dim.label.classList.remove('hidden');
-                    dim.label.style.left = `${(vec.x * 0.5 + 0.5) * window.innerWidth}px`;
-                    dim.label.style.top = `${(vec.y * -0.5 + 0.5) * window.innerHeight}px`;
-                }
-            } else dim.label.classList.add('hidden');
+            // Label frissítése
+            const vec = dim.group.position.clone().add(new THREE.Vector3(0, 800, 0)).project(camera);
+            if (vec.z < 1) {
+                dim.label.classList.remove('hidden');
+                dim.label.style.left = `${(vec.x * 0.5 + 0.5) * window.innerWidth}px`;
+                dim.label.style.top = `${(vec.y * -0.5 + 0.5) * window.innerHeight}px`;
+            } else {
+                dim.label.classList.add('hidden');
+            }
+
+            // Portál ütközés detektálása (distanceTo)
+            const distToPortal = playerGroup.position.distanceTo(dim.group.position);
+            
+            if (distToPortal < 350 && !isJumping) {
+                isJumping = true;
+                const targetYear = yearsData[idx];
+
+                // Vast Space fehéredés effekt
+                const overlay = document.createElement('div');
+                overlay.style.cssText = "position:fixed; inset:0; background:white; z-index:1000; opacity:0; transition: opacity 0.5s ease; pointer-events:none;";
+                document.body.appendChild(overlay);
+
+                setTimeout(() => overlay.style.opacity = "1", 10);
+
+                setTimeout(() => {
+                    window.location.href = `era.html?year=${targetYear}`;
+                }, 600);
+            }
         });
     }
     renderer.render(scene, camera);
