@@ -1,13 +1,52 @@
-html, body { margin: 0; padding: 0; width: 100%; background-color: #000; color: white; font-family: 'Audiowide', sans-serif; scrollbar-width: none; }
+html, body { margin: 0; padding: 0; width: 100%; background-color: #000; color: white; font-family: 'Audiowide', sans-serif; scrollbar-width: none; overflow-x: hidden; }
 body::-webkit-scrollbar { display: none; }
+
 #scroll-wrapper { position: relative; z-index: 10; width: 100%; }
 .panel { height: 100vh; width: 100%; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 .spacer-short { height: 250vh; }
+
 #chrono-title-wrapper { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 100%; z-index: 20; pointer-events: none; }
 #chrono-title { font-size: clamp(3rem, 12vw, 8rem); letter-spacing: 15px; margin: 0; }
 .char { display: inline-block; opacity: 0; transform: translateY(50px); }
+
 #dynamic-panels-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; perspective: 1500px; z-index: 5; pointer-events: none; }
 .gallery-panel { position: absolute; width: 260px; height: 360px; border: 1px solid rgba(255, 255, 255, 0.3); background: #111; opacity: 0; overflow: hidden; }
 .gallery-panel img { width: 100%; height: 100%; object-fit: cover; }
+
 #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; opacity: 0; filter: blur(10px); transition: filter 1.2s ease-out; }
-#bg-canvas.visible { opacity: 1; filter: blur(0px); cursor: crosshair; }
+#bg-canvas.visible { opacity: 1; filter: blur(0px); }
+
+/* KIJELZŐ STÍLUS */
+#radio-screen-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 100px;
+    z-index: 15;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+#screen-text {
+    font-family: 'Courier New', Courier, monospace;
+    color: #00ff00;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px #00ff00;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    text-align: center;
+}
+
+#screen-text.active {
+    opacity: 1;
+    animation: flicker 0.1s infinite;
+}
+
+@keyframes flicker { 0% { opacity: 0.9; } 100% { opacity: 1; } }
