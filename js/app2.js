@@ -85,7 +85,7 @@ updateDisplay("");
 let radio;
 let isPowerOn = false;
 
-new GLTFLoader().load('./3d/textures/Textures/NOALPHAglb.glb', (gltf) => {
+new GLTFLoader().load('./3d/textures/Textures/noalpha.glb', (gltf) => {
     radio = gltf.scene;
     radio.scale.set(7.8, 7.8, 7.8);
     radio.position.set(0, -1.2, 0);
