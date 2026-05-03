@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -18,26 +18,29 @@ const DRAG_THRESHOLD_PX = 4;
 export function RadioExperience() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [currentTrack, setCurrentTrack] = useState<Track>(defaultTrack);
   const currentTrackRef = useRef<Track>(defaultTrack);
   const ledStartRef = useRef<(() => void) | null>(null);
   const ledStopRef = useRef<(() => void) | null>(null);
 
-  useEffect(() => {
-    currentTrackRef.current = currentTrack;
-  }, [currentTrack]);
-
   const playSrc = useCallback((src: string) => {
     const audio = audioRef.current;
-    if (!audio) return;
-    if (!audio.src.endsWith(src)) {
+    if (!audio) {
+      console.warn('[radio] playSrc: no audio element');
+      return;
+    }
+    console.log('[radio] playSrc:', src, '(current:', audio.src, 'vol:', audio.volume, 'ready:', audio.readyState, ')');
+    const sameSrc = audio.src.endsWith(src);
+    if (!sameSrc) {
+      audio.pause();
       audio.src = src;
+      audio.load();
     } else {
       audio.currentTime = 0;
     }
-    audio.play()
-      .then(() => console.log('[radio] playing:', src))
-      .catch((err) => console.warn('[radio] audio.play() failed for', src, err));
+    const playPromise = audio.play();
+    if (playPromise) {
+      playPromise.then(() => console.log('[radio] playing:', src)).catch((err) => console.warn('[radio] audio.play() failed for', src, err.name, err.message));
+    }
   }, []);
 
   useEffect(() => {
@@ -52,7 +55,7 @@ export function RadioExperience() {
       scannerCycleSeconds: config.kittScanner.cycleSeconds,
       scannerBaseEmissive: config.kittScanner.baseEmissive,
       scannerPeakEmissive: config.kittScanner.peakEmissive,
-      scannerColor: config.kittScanner.color,
+      scannerColor: config.kittScanner.color
     });
     const spinner = createHangSpinner();
 
@@ -61,25 +64,11 @@ export function RadioExperience() {
 
     const orbit = config.cameraOrbit;
     let radio: THREE.Group | null = null;
-    let isPowerOn = false;
-    let displayMesh: THREE.Mesh | null = null;
-
-    const titleSprite = new THREE.Sprite(
-      new THREE.SpriteMaterial({
-        map: display.texture,
-        transparent: true,
-        depthTest: false,
-      }),
-    );
-    titleSprite.scale.set(4.5, 2.25, 1);
-    titleSprite.renderOrder = 999;
-    titleSprite.visible = false;
-    scene.add(titleSprite);
 
     new GLTFLoader().load(config.radioModelPath, (gltf: GLTF) => {
       radio = gltf.scene;
       radio.scale.set(7.8, 7.8, 7.8);
-      radio.position.set(0, orbit.lookAtY, 0);
+      radio.position.set(0, orbit.radioY, 0);
       radio.rotation.x = 0.25;
       scene.add(radio);
 
@@ -87,8 +76,28 @@ export function RadioExperience() {
         if (!(child instanceof THREE.Mesh)) return;
 
         if (child.name === config.meshNames.display) {
-          child.material = display.material;
-          displayMesh = child;
+          child.geometry.computeBoundingBox();
+          const bb = child.geometry.boundingBox;
+          if (bb) {
+            const w = bb.max.x - bb.min.x;
+            const h = bb.max.y - bb.min.y;
+            const d = bb.max.z - bb.min.z;
+            const cx = (bb.max.x + bb.min.x) / 2;
+            const cy = (bb.max.y + bb.min.y) / 2;
+            const cz = (bb.max.z + bb.min.z) / 2;
+            const overlay = new THREE.Mesh(
+              new THREE.PlaneGeometry(w * 0.7, h * 0.85),
+              new THREE.MeshBasicMaterial({
+                map: display.texture,
+                transparent: true,
+                depthTest: false
+              })
+            );
+            overlay.position.set(cx, cy, cz + d / 2);
+            overlay.renderOrder = 999;
+            overlay.raycast = () => {};
+            child.add(overlay);
+          }
           return;
         }
         if (config.meshNames.ledPattern.test(child.name)) {
@@ -112,16 +121,7 @@ export function RadioExperience() {
       return raycaster.intersectObjects(radio.children, true);
     };
 
-    const powerOn = () => {
-      if (isPowerOn) return;
-      isPowerOn = true;
-      display.showText('CHRONO BOOM');
-      titleSprite.visible = true;
-      if (displayMesh) {
-        const mat = displayMesh.material as THREE.MeshStandardMaterial;
-        gsap.to(mat, { emissiveIntensity: 3.5, duration: 0.5 });
-      }
-    };
+    const powerOn = () => {};
 
     const drag = {
       active: false,
@@ -132,7 +132,7 @@ export function RadioExperience() {
       lastY: 0,
       yaw: 0,
       pitch: 0,
-      spinningHang: null as THREE.Mesh | null,
+      spinningHang: null as THREE.Mesh | null
     };
 
     const onPointerDown = (event: PointerEvent) => {
@@ -159,6 +159,16 @@ export function RadioExperience() {
       const name = obj.name;
       console.log('[radio click] picked:', name);
 
+      if (name !== config.meshNames.display && !gsap.isTweening(obj.position)) {
+        gsap.to(obj.position, {
+          y: obj.position.y - 0.03,
+          duration: 0.12,
+          ease: 'power2.inOut',
+          yoyo: true,
+          repeat: 1
+        });
+      }
+
       if (name === config.meshNames.hang1 || name === config.meshNames.hang2) {
         spinner.start(obj);
         drag.spinningHang = obj;
@@ -172,12 +182,7 @@ export function RadioExperience() {
       if (config.meshNames.trackBoxNames.includes(name)) {
         const track = config.trackBoxes[name];
         if (track) {
-          const audio = audioRef.current;
-          if (audio) {
-            audio.pause();
-            audio.currentTime = 0;
-          }
-          setCurrentTrack(track);
+          currentTrackRef.current = track;
           display.showTrack(track);
           playSrc(track.src);
         }
@@ -218,7 +223,7 @@ export function RadioExperience() {
       }
     };
 
-    canvas.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointerdown', onPointerDown);
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerUp);
     window.addEventListener('pointercancel', onPointerUp);
@@ -232,8 +237,8 @@ export function RadioExperience() {
         trigger: '#scroll-wrapper',
         start: 'center center',
         end: 'bottom bottom',
-        scrub: 1,
-      },
+        scrub: 1
+      }
     });
 
     const startMs = performance.now();
@@ -246,8 +251,7 @@ export function RadioExperience() {
       lastMs = nowMs;
       const tSec = (nowMs - startMs) / 1000;
       if (radio) {
-        radio.position.y = orbit.lookAtY + Math.sin(tSec * 2) * 0.04;
-        titleSprite.position.set(0, radio.position.y + 3.2, 0);
+        radio.position.y = orbit.radioY + Math.sin(tSec * 2) * 0.04;
       }
 
       const yaw = drag.yaw + Math.sin(tSec * orbit.speedX * 2 * Math.PI) * (orbit.amplitudeX / cameraTarget.z);
@@ -267,7 +271,7 @@ export function RadioExperience() {
 
     return () => {
       cancelAnimationFrame(raf);
-      canvas.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointercancel', onPointerUp);
@@ -282,6 +286,7 @@ export function RadioExperience() {
     const audio = audioRef.current;
     if (!audio) return;
     audio.volume = config.defaultMusic.volume;
+    audio.loop = false;
 
     const onPlay = () => {
       ledStartRef.current?.();
@@ -303,16 +308,10 @@ export function RadioExperience() {
     };
   }, []);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.loop = currentTrack.src === config.defaultMusic.src ? config.defaultMusic.loop : false;
-  }, [currentTrack]);
-
   return (
     <>
-      <canvas id="bg-canvas" ref={canvasRef} />
-      <audio ref={audioRef} preload="auto" hidden />
+      <canvas id='bg-canvas' ref={canvasRef} />
+      <audio ref={audioRef} preload='auto' hidden />
     </>
   );
 }

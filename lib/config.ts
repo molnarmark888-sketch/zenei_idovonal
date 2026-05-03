@@ -30,6 +30,7 @@ export type CameraOrbitConfig = {
   speedY: number;
   speedZ: number;
   lookAtY: number;
+  radioY: number;
   dragSensitivity: number;
   dragYawLimit: number;
   dragPitchMin: number;
@@ -50,21 +51,15 @@ export type AppConfig = {
     peakEmissive: number;
     color: number;
   };
-  particleBurst: {
-    count: number;
-    speed: number;
-    lifetimeSec: number;
-    color: number;
-    size: number;
-  };
+ 
 };
 
 export const defaultTrack: Track = {
-  src: '/zene/zene1.mp3',
-  title: 'TAF TAF',
-  artist: 'Simba La Rue',
+  src: '/zene/cello.wav',
+  title: 'Cello',
+  artist: 'Cello Artist',
   year: 2023,
-  description: 'Olasz newcommer.',
+  description: 'Nice cello music.'
 };
 
 export const config: AppConfig = {
@@ -78,35 +73,35 @@ export const config: AppConfig = {
   defaultMusic: { src: '/zene/westcoast.mp3', volume: 0.3, loop: true },
   radioModelPath: '/3d/radio.glb',
   trackBoxes: {
-    'Box.006': {
+    'Box006': {
       src: '/zene/zene1.mp3',
       title: 'TAF TAF',
       artist: 'Simba La Rue',
       year: 2023,
       description: 'Olasz newcommer.',
     },
-    'Box.007': {
+    'Box007': {
       src: '/zene/zene2.mp3',
       title: 'MAGIE',
       artist: 'MAES',
       year: 2024,
       description: 'French newcommer.',
     },
-    'Box.008': {
+    'Box008': {
       src: '/zene/zene3.mp3',
       title: "X Gon' Give It To Ya",
       artist: 'DMX',
       year: 2003,
       description: '',
     },
-    'Box.009': {
+    'Box009': {
       src: '/zene/zene4.mp3',
       title: 'Mivel Játszol',
       artist: 'Akkezdet Phiai',
       year: 2003,
       description: '',
     },
-    'Box.010': {
+    'Box010': {
       src: '/zene/zene5.mp3',
       title: 'In Da Club',
       artist: '50 Cent',
@@ -115,12 +110,12 @@ export const config: AppConfig = {
     },
   },
   meshNames: {
-    display: 'Box.005',
+    display: 'Box005',
     hang1: 'HANG1',
     hang2: 'HANG2',
     ledPattern: /^LED\d+$/,
     kittScannerLeds: ['LED8', 'LED9', 'LED10', 'LED11'],
-    trackBoxNames: ['Box.006', 'Box.007', 'Box.008', 'Box.009', 'Box.010'],
+    trackBoxNames: ['Box006', 'Box007', 'Box008', 'Box009', 'Box010'],
     ignore: ['Scene', 'Box'],
   },
   cameraOrbit: {
@@ -132,7 +127,8 @@ export const config: AppConfig = {
     speedX: 0.12,
     speedY: 0.17,
     speedZ: 0.08,
-    lookAtY: -2.0,
+    lookAtY: -1.0,
+    radioY: -2.0,
     dragSensitivity: 0.003,
     dragYawLimit: 0.35,
     dragPitchMin: -0.75,
@@ -144,12 +140,6 @@ export const config: AppConfig = {
     baseEmissive: 0.15,
     peakEmissive: 6,
     color: 0xff1a1a,
-  },
-  particleBurst: {
-    count: 600,
-    speed: 0.06,
-    lifetimeSec: 1.6,
-    color: 0x66f0ff,
-    size: 0.04,
-  },
+  }
+
 };
