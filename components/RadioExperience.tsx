@@ -64,8 +64,6 @@ export function RadioExperience() {
 
     const orbit = config.cameraOrbit;
     let radio: THREE.Group | null = null;
-    let isPowerOn = false;
-    let displayMesh: THREE.Mesh | null = null;
     let displayOverlay: THREE.Mesh | null = null;
 
     new GLTFLoader().load(config.radioModelPath, (gltf: GLTF) => {
@@ -79,9 +77,6 @@ export function RadioExperience() {
         if (!(child instanceof THREE.Mesh)) return;
 
         if (child.name === config.meshNames.display) {
-          child.material = display.material;
-          displayMesh = child;
-
           child.geometry.computeBoundingBox();
           const bb = child.geometry.boundingBox;
           if (bb) {
@@ -92,16 +87,16 @@ export function RadioExperience() {
             const cy = (bb.max.y + bb.min.y) / 2;
             const cz = (bb.max.z + bb.min.z) / 2;
             const overlay = new THREE.Mesh(
-              new THREE.PlaneGeometry(w, h),
+              new THREE.PlaneGeometry(w * 0.9, h * 1.0),
               new THREE.MeshBasicMaterial({
                 map: display.texture,
                 transparent: true,
+                opacity: 1,
                 depthTest: false
               })
             );
-            overlay.position.set(cx, cy, cz + d / 2 + 0.001);
+            overlay.position.set(cx, cy, cz + d * 0.4);
             overlay.renderOrder = 999;
-            overlay.visible = false;
             overlay.raycast = () => {};
             child.add(overlay);
             displayOverlay = overlay;
@@ -129,16 +124,7 @@ export function RadioExperience() {
       return raycaster.intersectObjects(radio.children, true);
     };
 
-    const powerOn = () => {
-      if (isPowerOn) return;
-      isPowerOn = true;
-      //  display.showText('CHRONO BOOM');
-      if (displayOverlay) displayOverlay.visible = true;
-      if (displayMesh) {
-        const mat = displayMesh.material as THREE.MeshStandardMaterial;
-        gsap.to(mat, { emissiveIntensity: 3.5, duration: 0.5 });
-      }
-    };
+    const powerOn = () => {};
 
     const drag = {
       active: false,
@@ -177,6 +163,9 @@ export function RadioExperience() {
       console.log('aaaaaa[radio click] picked:', name);
 
       if (name === 'HANG1' || name === 'HANG2') {
+        return;
+      }
+      if (name === 'Box005') {
         return;
       }
       if (!gsap.isTweening(obj.position)) {
