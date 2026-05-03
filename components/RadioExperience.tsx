@@ -64,6 +64,9 @@ export function RadioExperience() {
 
     const orbit = config.cameraOrbit;
     let radio: THREE.Group | null = null;
+    let isPowerOn = false;
+    let displayMesh: THREE.Mesh | null = null;
+    let displayOverlay: THREE.Mesh | null = null;
 
     new GLTFLoader().load(config.radioModelPath, (gltf: GLTF) => {
       radio = gltf.scene;
@@ -76,6 +79,9 @@ export function RadioExperience() {
         if (!(child instanceof THREE.Mesh)) return;
 
         if (child.name === config.meshNames.display) {
+          child.material = display.material;
+          displayMesh = child;
+
           child.geometry.computeBoundingBox();
           const bb = child.geometry.boundingBox;
           if (bb) {
@@ -86,17 +92,19 @@ export function RadioExperience() {
             const cy = (bb.max.y + bb.min.y) / 2;
             const cz = (bb.max.z + bb.min.z) / 2;
             const overlay = new THREE.Mesh(
-              new THREE.PlaneGeometry(w * 0.7, h * 0.85),
+              new THREE.PlaneGeometry(w, h),
               new THREE.MeshBasicMaterial({
                 map: display.texture,
                 transparent: true,
                 depthTest: false
               })
             );
-            overlay.position.set(cx, cy, cz + d / 2);
+            overlay.position.set(cx, cy, cz + d / 2 + 0.001);
             overlay.renderOrder = 999;
+            overlay.visible = false;
             overlay.raycast = () => {};
             child.add(overlay);
+            displayOverlay = overlay;
           }
           return;
         }
@@ -121,7 +129,16 @@ export function RadioExperience() {
       return raycaster.intersectObjects(radio.children, true);
     };
 
-    const powerOn = () => {};
+    const powerOn = () => {
+      if (isPowerOn) return;
+      isPowerOn = true;
+      //  display.showText('CHRONO BOOM');
+      if (displayOverlay) displayOverlay.visible = true;
+      if (displayMesh) {
+        const mat = displayMesh.material as THREE.MeshStandardMaterial;
+        gsap.to(mat, { emissiveIntensity: 3.5, duration: 0.5 });
+      }
+    };
 
     const drag = {
       active: false,
@@ -157,11 +174,14 @@ export function RadioExperience() {
       if (!hit) return;
       const obj = hit.object as THREE.Mesh;
       const name = obj.name;
-      console.log('[radio click] picked:', name);
+      console.log('aaaaaa[radio click] picked:', name);
 
-      if (name !== config.meshNames.display && !gsap.isTweening(obj.position)) {
+      if (name === 'HANG1' || name === 'HANG2') {
+        return;
+      }
+      if (!gsap.isTweening(obj.position)) {
         gsap.to(obj.position, {
-          y: obj.position.y - 0.03,
+          y: obj.position.y - 0.007,
           duration: 0.12,
           ease: 'power2.inOut',
           yoyo: true,
