@@ -66,6 +66,13 @@ export type StageManagerEntry = {
   hatter: string;
   tavolsag: number;
   oldal: string;
+  blurRadius: number;
+  opacityBase: number;
+  magassag: number;
+  fuggoleges: 'fold' | 'kozep' | 'felso';
+  eltolas: number;
+  yEltolas: number;
+  parallaxIntenzitas: number;
 };
 
 export type AppConfig = {
@@ -201,31 +208,66 @@ export const config: AppConfig = {
       name: 'hatter',
       hatter: 'img/stage-metro-station/bg.png',
       tavolsag: 100,
-      oldal: 'bal'
+      oldal: 'bal',
+      blurRadius: 2,
+      opacityBase: 0.75,
+      magassag: 100,
+      fuggoleges: 'fold',
+      eltolas: 0,
+      yEltolas: 0,
+      parallaxIntenzitas: 1.0
     },
     {
       name: 'graffiti',
       hatter: 'img/stage-metro-station/graff.png',
       tavolsag: 95,
-      oldal: 'jobb'
+      oldal: 'jobb',
+      blurRadius: 1.5,
+      opacityBase: 0.85,
+      magassag: 16,
+      fuggoleges: 'kozep',
+      eltolas: -180,
+      yEltolas: -60,
+      parallaxIntenzitas: 1.0
     },
     {
       name: 'tábla',
       hatter: 'img/stage-metro-station/sign.png',
       tavolsag: 80,
-      oldal: 'kozep'
+      oldal: 'kozep',
+      blurRadius: 0.8,
+      opacityBase: 0.9,
+      magassag: 20,
+      fuggoleges: 'felso',
+      eltolas: -100,
+      yEltolas: -60,
+      parallaxIntenzitas: 1.0
     },
     {
       name: 'kuka',
       hatter: 'img/stage-metro-station/kuka.png',
       tavolsag: 70,
-      oldal: 'jobb'
+      oldal: 'jobb',
+      blurRadius: 0.4,
+      opacityBase: 0.95,
+      magassag: 70,
+      fuggoleges: 'fold',
+      eltolas: -100,
+      yEltolas: 200,
+      parallaxIntenzitas: 1.0
     },
     {
       name: 'oszlop',
       hatter: 'img/stage-metro-station/oszlop.png',
       tavolsag: 10,
-      oldal: 'bal'
+      oldal: 'bal',
+      blurRadius: 0,
+      opacityBase: 1.0,
+      magassag: 150,
+      fuggoleges: 'fold',
+      eltolas: 150,
+      yEltolas: 200,
+      parallaxIntenzitas: 0.3
     }
   ]
 };

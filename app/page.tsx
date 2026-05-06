@@ -31,8 +31,6 @@ export default function Page() {
           <ParallaxExperience />
         </section>
       )}
-
-      <div className="h-[10vh] bg-black" />
     </main>
   );
 }
