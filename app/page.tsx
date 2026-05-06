@@ -11,32 +11,27 @@ export default function Page() {
   const [isActivated, setIsActivated] = useState(false);
 
   return (
-    // A min-h-screen és a relative flow biztosítja, hogy legyen görgetősáv
     <main className="relative bg-black min-h-screen w-full overflow-x-hidden">
-      
-      {/* 1. SZEKCIÓ: HERO */}
       <section className="relative w-full h-screen">
         <HeroTitle />
       </section>
 
-      {/* 2. SZEKCIÓ: PANELEK */}
-      <section className="relative w-full">
-        <ScrollPanels panels={config.scrollPanels} />
-      </section>
+      {!isActivated && (
+        <section className="relative w-full">
+          <ScrollPanels panels={config.scrollPanels} />
+        </section>
+      )}
 
-      {/* 3. SZEKCIÓ: RÁDIÓ */}
       <section id="section-radio" className="relative w-full h-screen">
-        <RadioExperience onSelectImage={() => setIsActivated(true)} />
+        <RadioExperience onF8Activate={() => setIsActivated(true)} />
       </section>
 
-      {/* 4. SZEKCIÓ: PARALLAX (Csak ha aktiválva van) */}
       {isActivated && (
-        <section className="relative z-50 w-full bg-black mt-[-20vh]">
+        <section id="section-parallax" className="relative z-50 w-full bg-black">
           <ParallaxExperience />
         </section>
       )}
 
-      {/* Biztonsági tartalék, hogy biztosan lehessen görgetni */}
       <div className="h-[10vh] bg-black" />
     </main>
   );

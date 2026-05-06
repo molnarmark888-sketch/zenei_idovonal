@@ -144,3 +144,30 @@ body::-webkit-scrollbar {
   0% { opacity: 0.9; }
   100% { opacity: 1; }
 }
+
+#radio-hud {
+  position: fixed;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-audiowide), 'Courier New', monospace;
+  font-size: clamp(2rem, 5vw, 4rem);
+  letter-spacing: 0.2em;
+  color: white;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  z-index: 200;
+  white-space: nowrap;
+  animation: hud-fade-in 0.15s ease-out, hud-flicker 0.12s linear infinite 0.15s;
+}
+
+@keyframes hud-fade-in {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to { opacity: 0.75; transform: translate(-50%, 0); }
+}
+
+@keyframes hud-flicker {
+  0%, 100% { opacity: 0.75; }
+  35% { opacity: 0.55; }
+  70% { opacity: 0.85; }
+}

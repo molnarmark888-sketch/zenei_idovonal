@@ -22,7 +22,7 @@ export function ParallaxExperience() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    let ctx = gsap.context(() => {
+    const ctx = gsap.context(() => {
       // Setup alaphelyzetek
       gsap.set(repRef.current, { xPercent: -50, left: "50%", zIndex: 100 });
       gsap.set(vonatRef.current, { xPercent: -50, left: "50%", yPercent: 150, scale: 0.4, opacity: 0, zIndex: 150 });
@@ -115,7 +115,7 @@ export function ParallaxExperience() {
         />
 
         {/* ELŐZŐ JELENET RÉTEGEI */}
-        <img ref={bgImgRef} src="/img/bg.jpg" className="absolute inset-0 w-full h-full object-cover z-10" />
+        <img id="parallax-bg" ref={bgImgRef} src="/img/bg.jpg" className="absolute inset-0 w-full h-full object-cover z-10" />
 
         <div className="absolute inset-0 z-20 flex items-end justify-center pointer-events-none">
           <img ref={snoopRef} src="/img/snoop.png" className="w-auto h-[80vh] object-contain" />
