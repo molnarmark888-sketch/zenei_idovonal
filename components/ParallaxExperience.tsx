@@ -4,132 +4,139 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { config } from '@/lib/config';
 
-export function ParallaxExperience() {
+export function ParallaxExperience({ sectionId }: { sectionId: number }) {
   const triggerRef = useRef<HTMLDivElement>(null);
-  const pinRef = useRef<HTMLDivElement>(null);
-
-  const bgImgRef = useRef<HTMLImageElement>(null);
-  const snoopRef = useRef<HTMLImageElement>(null);
-  const repRef = useRef<HTMLImageElement>(null);
-  const cityRef = useRef<HTMLDivElement>(null);
-  const sinBalRef = useRef<HTMLImageElement>(null);
-  const sinJobbRef = useRef<HTMLImageElement>(null);
-  const vonatRef = useRef<HTMLImageElement>(null);
-  const firstStationRef = useRef<HTMLDivElement>(null);
-  const stationBgRef = useRef<HTMLImageElement>(null);
-  const lampRef = useRef<HTMLDivElement>(null);
+  const jelenetRef = useRef<HTMLDivElement>(null);
+  const hatterRef = useRef<HTMLImageElement>(null);
   const stageRefs = useRef<Map<string, HTMLImageElement | null>>(new Map());
 
   const [isInteractive, setIsInteractive] = useState(false);
 
+  const sectionKey = `S${sectionId}` as keyof typeof config.sections;
+  const section = config.sections[sectionKey];
+  const isEmpty = section.hatter === null && section.retegek.length === 0;
+
   useEffect(() => {
+    if (isEmpty) return;
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      gsap.set(repRef.current, { xPercent: -50, left: '50%', zIndex: 100 });
-      gsap.set(vonatRef.current, { xPercent: -50, left: '50%', yPercent: 150, scale: 0.4, opacity: 0, zIndex: 150 });
-      gsap.set(sinBalRef.current, { xPercent: -120, opacity: 0 });
-      gsap.set(sinJobbRef.current, { xPercent: 120, opacity: 0 });
+      if (section.hatter && hatterRef.current) {
+        gsap.set(hatterRef.current, {
+          opacity: section.hatter.opacityBase,
+          filter: section.hatter.blurRadius > 0 ? `blur(${section.hatter.blurRadius}px)` : 'none',
+          scale: section.hatter.scale,
+          transformOrigin: 'center center'
+        });
+      }
 
-      gsap.set(firstStationRef.current, {
-        opacity: 0,
-        scale: 1
-      });
-
-      config.stageManager.forEach((entry) => {
-        const img = stageRefs.current.get(entry.name);
+      section.retegek.forEach((reteg) => {
+        const img = stageRefs.current.get(reteg.name);
         if (!img) return;
-        if (entry.tavolsag === 100) return;
 
-        if (entry.oldal === 'bal') {
+        if (reteg.oldal === 'bal') {
           gsap.set(img, { left: 0 });
-        } else if (entry.oldal === 'jobb') {
+        } else if (reteg.oldal === 'jobb') {
           gsap.set(img, { left: 'auto', right: 0 });
-        } else if (entry.oldal === 'kozep') {
+        } else {
           gsap.set(img, { left: '50%', xPercent: -50 });
         }
 
         let transformOrigin = 'bottom center';
-        if (entry.fuggoleges === 'fold') {
+        if (reteg.fuggoleges === 'fold') {
           gsap.set(img, { bottom: 0 });
           transformOrigin = 'bottom center';
-        } else if (entry.fuggoleges === 'kozep') {
+        } else if (reteg.fuggoleges === 'kozep') {
           gsap.set(img, { top: '50%', yPercent: -50 });
           transformOrigin = 'center center';
-        } else if (entry.fuggoleges === 'felso') {
+        } else {
           gsap.set(img, { top: 0 });
           transformOrigin = 'top center';
         }
 
         gsap.set(img, {
-          x: entry.eltolas,
-          y: entry.yEltolas,
+          x: reteg.eltolas,
+          y: reteg.yEltolas,
           transformOrigin,
-          opacity: entry.opacityBase,
-          filter: entry.blurRadius > 0 ? `blur(${entry.blurRadius}px)` : 'none'
+          opacity: reteg.opacityBase,
+          filter: reteg.blurRadius > 0 ? `blur(${reteg.blurRadius}px)` : 'none'
         });
-      });
-
-      if (stationBgRef.current) {
-        gsap.set(stationBgRef.current, {
-          opacity: 0.78,
-          filter: 'blur(2px)',
-          scale: 1.05,
-          transformOrigin: 'center center'
-        });
-      }
-
-      gsap.to(lampRef.current, {
-        opacity: 0.1, duration: 0.05, repeat: -1, yoyo: true, repeatDelay: 0.1,
-        ease: 'rough({ strength: 2, points: 20, randomize: true })'
       });
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: triggerRef.current,
-          start: 'top top',
-          end: '+=800%',
-          pin: pinRef.current,
-          scrub: 0.3,
-          onUpdate: (self) => {
-            setIsInteractive(self.progress > 0.6);
-          }
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        },
+        onComplete: () => {
+          setIsInteractive(true);
         }
       });
 
-      tl.fromTo(snoopRef.current, { y: 400, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 })
-        .to(snoopRef.current, { opacity: 0, scale: 1.1, duration: 0.3 }, '-=0.2')
-        .fromTo(repRef.current, { yPercent: -150 }, { yPercent: 450, scale: 8, duration: 1, ease: 'power2.in' }, '<')
-        .fromTo(cityRef.current, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1 }, '<')
-        .to([sinBalRef.current, sinJobbRef.current], { xPercent: 0, opacity: 1, duration: 0.4 }, '-=0.3')
-        .to(vonatRef.current, { yPercent: -20, scale: 1.3, opacity: 1, duration: 0.8 }, '-=0.1')
-        .to(vonatRef.current, { yPercent: -500, scale: 100, duration: 1.2, ease: 'power4.in' }, '+=0.1')
-        .to(firstStationRef.current, { opacity: 1, scale: 1, duration: 1.2 }, '-=2')
-        .to([cityRef.current, repRef.current, sinBalRef.current, sinJobbRef.current, bgImgRef.current], { opacity: 0, duration: 0.1 }, '-=0.5')
-        .to({}, { duration: 2 });
+      if (section.hatter && hatterRef.current) {
+        tl.fromTo(
+          hatterRef.current,
+          { opacity: 0, scale: section.hatter.scale + 0.05 },
+          { opacity: section.hatter.opacityBase, scale: section.hatter.scale, duration: 0.8, ease: 'power2.out' },
+          0
+        );
+      }
+
+      [...section.retegek]
+        .sort((a, b) => a.belepo.sorrend - b.belepo.sorrend)
+        .forEach((reteg) => {
+          const img = stageRefs.current.get(reteg.name);
+          if (!img) return;
+          const baseX = reteg.eltolas;
+          const baseY = reteg.yEltolas;
+          const b = reteg.belepo;
+          tl.fromTo(
+            img,
+            {
+              x: baseX + (b.fromX ?? 0),
+              y: baseY + (b.fromY ?? 0),
+              scale: b.fromScale ?? 1,
+              rotate: b.fromRotate ?? 0,
+              opacity: b.fromOpacity ?? 0
+            },
+            {
+              x: baseX,
+              y: baseY,
+              scale: 1,
+              rotate: 0,
+              opacity: reteg.opacityBase,
+              duration: b.duration,
+              ease: b.ease
+            },
+            b.sorrend
+          );
+        });
     }, triggerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [sectionId, isEmpty, section]);
 
   useEffect(() => {
+    if (isEmpty) return;
+
     if (!isInteractive) {
-      config.stageManager.forEach((entry) => {
-        const img = stageRefs.current.get(entry.name);
+      section.retegek.forEach((reteg) => {
+        const img = stageRefs.current.get(reteg.name);
         if (!img) return;
         gsap.to(img, {
-          x: entry.eltolas,
-          y: entry.yEltolas,
-          filter: entry.blurRadius > 0 ? `blur(${entry.blurRadius}px)` : 'none',
+          x: reteg.eltolas,
+          y: reteg.yEltolas,
+          filter: reteg.blurRadius > 0 ? `blur(${reteg.blurRadius}px)` : 'none',
           duration: 0.5,
           overwrite: 'auto'
         });
       });
-      if (stationBgRef.current) {
-        gsap.to(stationBgRef.current, { x: 0, y: 0, duration: 0.5, overwrite: 'auto' });
+      if (hatterRef.current) {
+        gsap.to(hatterRef.current, { x: 0, y: 0, duration: 0.5, overwrite: 'auto' });
       }
-      if (firstStationRef.current) {
-        gsap.to(firstStationRef.current, { rotateX: 0, rotateY: 0, duration: 0.6, overwrite: 'auto' });
+      if (jelenetRef.current) {
+        gsap.to(jelenetRef.current, { rotateX: 0, rotateY: 0, duration: 0.6, overwrite: 'auto' });
       }
       return;
     }
@@ -147,8 +154,8 @@ export function ParallaxExperience() {
       const nx = e.clientX / window.innerWidth - 0.5;
       const ny = e.clientY / window.innerHeight - 0.5;
 
-      if (firstStationRef.current) {
-        gsap.to(firstStationRef.current, {
+      if (jelenetRef.current) {
+        gsap.to(jelenetRef.current, {
           rotateY: nx * TILT_MAX_Y,
           rotateX: -ny * TILT_MAX_X,
           duration: 0.8,
@@ -157,8 +164,8 @@ export function ParallaxExperience() {
         });
       }
 
-      if (stationBgRef.current) {
-        gsap.to(stationBgRef.current, {
+      if (hatterRef.current) {
+        gsap.to(hatterRef.current, {
           x: -nx * X_FAR * 2,
           y: -ny * Y_FAR * 2,
           duration: DURATION_FAR,
@@ -167,30 +174,28 @@ export function ParallaxExperience() {
         });
       }
 
-      config.stageManager.forEach((entry) => {
-        const img = stageRefs.current.get(entry.name);
+      section.retegek.forEach((reteg) => {
+        const img = stageRefs.current.get(reteg.name);
         if (!img) return;
-        if (entry.tavolsag === 100) return;
 
-        const depth = (100 - entry.tavolsag) / 100;
+        const depth = (100 - reteg.tavolsag) / 100;
         const maxX = X_FAR + depth * (X_NEAR - X_FAR);
         const maxY = Y_FAR + depth * (Y_NEAR - Y_FAR);
 
-        const intensity = entry.parallaxIntenzitas;
-        let offsetX = -nx * maxX * intensity;
-        let offsetY = -ny * maxY * intensity;
-        if (entry.oldal === 'bal') offsetX = Math.max(offsetX, -maxX * 0.8);
-        else if (entry.oldal === 'jobb') offsetX = Math.min(offsetX, maxX * 0.8);
-        offsetX += entry.eltolas;
-        offsetY += entry.yEltolas;
+        let offsetX = -nx * maxX * reteg.parallaxIntenzitas;
+        const offsetY = -ny * maxY * reteg.parallaxIntenzitas;
+        if (reteg.oldal === 'bal') offsetX = Math.max(offsetX, -maxX * 0.8);
+        else if (reteg.oldal === 'jobb') offsetX = Math.min(offsetX, maxX * 0.8);
 
+        const finalX = offsetX + reteg.eltolas;
+        const finalY = offsetY + reteg.yEltolas;
         const duration = DURATION_FAR - depth * (DURATION_FAR - DURATION_NEAR);
-        const dynamicBlur = entry.blurRadius + depth * Math.abs(nx) * 1.5;
+        const dynamicBlur = reteg.blurRadius + depth * Math.abs(nx) * 1.5;
         const filterVal = dynamicBlur > 0.05 ? `blur(${dynamicBlur.toFixed(2)}px)` : 'none';
 
         gsap.to(img, {
-          x: offsetX,
-          y: offsetY,
+          x: finalX,
+          y: finalY,
           filter: filterVal,
           duration,
           ease: 'power2.out',
@@ -201,79 +206,52 @@ export function ParallaxExperience() {
 
     window.addEventListener('mousemove', moveHandler, { passive: true });
     return () => window.removeEventListener('mousemove', moveHandler);
-  }, [isInteractive]);
+  }, [isInteractive, isEmpty, section]);
+
+  if (isEmpty) {
+    return (
+      <div className='relative h-screen w-full flex items-center justify-center bg-black'>
+        <p className='text-white/70 text-2xl tracking-widest uppercase'>Hamarosan</p>
+      </div>
+    );
+  }
 
   return (
     <div ref={triggerRef} className='bg-black w-full'>
-      <section ref={pinRef} className='relative h-screen w-full overflow-hidden'>
-        {/* FIRST STATION — interaktív zárókép, stageManager-rétegekkel */}
+      <section className='relative h-screen w-full overflow-hidden'>
         <div
-          ref={firstStationRef}
+          ref={jelenetRef}
           className='absolute inset-0 z-0'
-          style={{
-            perspective: '1500px',
-            transformStyle: 'preserve-3d',
-            willChange: 'transform'
-          }}
+          style={{ perspective: '1500px', transformStyle: 'preserve-3d', willChange: 'transform' }}
         >
-          <img
-            ref={stationBgRef}
-            src='/img/stage-metro-station/station-bg.jpg'
-            className='absolute inset-0 w-full h-full object-cover'
-            style={{ willChange: 'transform' }}
-            alt='firstStation háttér'
-          />
-          {config.stageManager.map((entry) => {
-            if (entry.tavolsag === 100) return null;
-            return (
-              <img
-                key={entry.name}
-                ref={(el) => {
-                  stageRefs.current.set(entry.name, el);
-                }}
-                src={`/${entry.hatter}`}
-                alt={entry.name}
-                className='absolute pointer-events-none'
-                style={{
-                  zIndex: 100 - entry.tavolsag,
-                  height: `${entry.magassag}vh`,
-                  width: 'auto',
-                  maxWidth: 'none',
-                  willChange: 'transform, filter'
-                }}
-              />
-            );
-          })}
+          {section.hatter && (
+            <img
+              ref={hatterRef}
+              src={section.hatter.src}
+              className='absolute inset-0 w-full h-full object-cover'
+              style={{ willChange: 'transform' }}
+              alt={`section${sectionId} háttér`}
+            />
+          )}
+          {section.retegek.map((reteg) => (
+            <img
+              key={reteg.name}
+              ref={(el) => {
+                stageRefs.current.set(reteg.name, el);
+              }}
+              src={reteg.src}
+              alt={reteg.name}
+              className='absolute pointer-events-none'
+              style={{
+                zIndex: 100 - reteg.tavolsag,
+                height: `${reteg.magassag}vh`,
+                width: 'auto',
+                maxWidth: 'none',
+                willChange: 'transform, filter'
+              }}
+            />
+          ))}
         </div>
-
-        {/* LÁMPA */}
-        <div
-          ref={lampRef}
-          className='absolute right-[5%] top-[40%] w-[500px] h-[600px] bg-yellow-600/20 rounded-full blur-[130px] z-10 pointer-events-none'
-          style={{ mixBlendMode: 'plus-lighter' }}
-        />
-
-        {/* ELŐZŐ JELENET RÉTEGEI */}
-        <img
-          id='parallax-bg'
-          ref={bgImgRef}
-          src='/img/bg.jpg'
-          className='absolute inset-0 w-full h-full object-cover z-10'
-          alt='parallax háttér'
-        />
-
-        <div className='absolute inset-0 z-20 flex items-end justify-center pointer-events-none'>
-          <img ref={snoopRef} src='/img/snoop.png' className='w-auto h-[80vh] object-contain' alt='snoop' />
-        </div>
-
-        <div ref={cityRef} className='absolute inset-0 z-30 w-full h-full'>
-          <img src='/img/city.jpg' className='w-full h-full object-cover' alt='city' />
-          <img ref={sinBalRef} src='/img/sin.png' className='absolute left-0 top-0 h-full w-1/3 object-cover z-40 rotate-90' alt='sin bal' />
-          <img ref={sinJobbRef} src='/img/sin.png' className='absolute right-0 top-25 h-full w-1/3 object-cover z-40 -rotate-90' alt='sin jobb' />
-          <img ref={vonatRef} src='/img/vonat.png' className='absolute bottom-0 w-full max-w-[1000px] h-auto z-50 pointer-events-none' alt='vonat' />
-        </div>
-
-        <img ref={repRef} src='/img/rep.png' className='absolute top-0 w-[60%] h-auto z-[100] pointer-events-none' alt='rep' />
       </section>
     </div>
   );

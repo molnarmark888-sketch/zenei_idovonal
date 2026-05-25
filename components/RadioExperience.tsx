@@ -18,10 +18,11 @@ const DRAG_THRESHOLD_PX = 4;
 type DragMode = 'idle' | 'cameraOrbit' | 'hang1' | 'hang2';
 type FHoldMode = null | 'F3' | 'F4' | 'F5' | 'F6';
 
-export function RadioExperience({ onF8Activate }: { onF8Activate?: () => void }) {
+export function RadioExperience({ onF8Activate }: { onF8Activate?: (sectionId: number) => void }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentTrackRef = useRef<Track>(defaultTrack);
+  const selectedSectionRef = useRef<number>(1);
   const ledStartRef = useRef<(() => void) | null>(null);
   const ledStopRef = useRef<(() => void) | null>(null);
 
@@ -193,9 +194,12 @@ export function RadioExperience({ onF8Activate }: { onF8Activate?: () => void })
       pitch: 0,
       mode: 'idle' as DragMode,
       modeMesh: null as THREE.Mesh | null,
-      pressedMesh: null as THREE.Mesh | null,
-      pressedOriginalY: 0
+      pressedMesh: null as THREE.Mesh | null
     };
+
+    // Minden hit-elhető mesh VALÓDI nyugalmi lokális Y-ja, egyszer rögzítve (az első press előtt).
+    // A press-animáció mindig ehhez tér vissza — így gyors kattintásnál sincs kumulatív lecsúszás.
+    const restY = new Map<THREE.Mesh, number>();
 
     let lastHudText: string | null = null;
 
@@ -256,14 +260,20 @@ export function RadioExperience({ onF8Activate }: { onF8Activate?: () => void })
     };
 
     const pressDown = (obj: THREE.Mesh) => {
-      if (drag.pressedMesh) {
+      // A nyugalmi Y-t CSAK az első alkalommal rögzítjük, amikor a mesh még biztosan
+      // alaphelyzetben van (még nem mozgatta press). Később mindig ezt használjuk.
+      if (!restY.has(obj)) {
+        restY.set(obj, obj.position.y);
+      }
+      const baseY = restY.get(obj) as number;
+
+      if (drag.pressedMesh && drag.pressedMesh !== obj) {
         pressRelease();
       }
       drag.pressedMesh = obj;
-      drag.pressedOriginalY = obj.position.y;
       gsap.killTweensOf(obj.position);
       gsap.to(obj.position, {
-        y: obj.position.y - 0.007,
+        y: baseY - 0.007,
         duration: 0.12,
         ease: 'power2.out'
       });
@@ -272,18 +282,19 @@ export function RadioExperience({ onF8Activate }: { onF8Activate?: () => void })
     const pressRelease = () => {
       const obj = drag.pressedMesh;
       if (!obj) return;
-      const originalY = drag.pressedOriginalY;
       drag.pressedMesh = null;
+      const baseY = restY.get(obj);
+      if (baseY === undefined) return;
       gsap.killTweensOf(obj.position);
       gsap.to(obj.position, {
-        y: originalY,
+        y: baseY,
         duration: 0.12,
         ease: 'power2.in'
       });
     };
 
     const startF8Transition = () => {
-      onF8ActivateRef.current?.();
+      onF8ActivateRef.current?.(selectedSectionRef.current);
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -400,6 +411,7 @@ export function RadioExperience({ onF8Activate }: { onF8Activate?: () => void })
         const track = config.trackBoxes[name];
         if (track) {
           currentTrackRef.current = track;
+          selectedSectionRef.current = Number(name.slice(1));
           display.showTrack(track);
           playSrc(track.src);
           const idx = config.meshNames.trackBoxNames.indexOf(name);
