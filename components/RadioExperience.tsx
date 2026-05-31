@@ -49,7 +49,7 @@ export function RadioExperience({
     onF8ActivateRef.current = onF8Activate;
   }, [onF8Activate]);
 
-  const releaseF8Ref = useRef<(() => void) | null>(null);
+  const returnToRadioViewRef = useRef<(() => void) | null>(null);
 
   const [hudText, setHudText] = useState<string | null>(null);
   const hudTimeoutRef = useRef<number | null>(null);
@@ -333,7 +333,28 @@ export function RadioExperience({
       });
     };
 
-    releaseF8Ref.current = releaseHeld;
+    // A "Vissza a rádióhoz": az F8 felenged, ÉS a rádió a belépéskori "zoomolt, látható"
+    // állapotába kerül (kamera zoomedZ-re, #bg-canvas opacity 1-re). Scroll-független, mert a
+    // canvas opacity-t egyébként a (F8 után unmountolt) ScrollPanels timeline vezérli.
+    const returnToRadioView = () => {
+      releaseHeld();
+      gsap.to(cameraTarget, {
+        z: orbit.zoomedZ,
+        duration: config.f8Transition.duration,
+        ease: 'power2.inOut',
+        overwrite: 'auto'
+      });
+      const canvasEl = canvasRef.current;
+      if (canvasEl) {
+        gsap.to(canvasEl, {
+          opacity: 1,
+          duration: config.f8Transition.duration,
+          overwrite: 'auto'
+        });
+      }
+    };
+
+    returnToRadioViewRef.current = returnToRadioView;
 
     const startF8Transition = () => {
       onF8ActivateRef.current?.(selectedSectionRef.current);
@@ -588,11 +609,11 @@ export function RadioExperience({
     };
   }, [playSrc]);
 
-  // A "Vissza a rádióhoz" gomb növeli a returnNonce-t → az F8 mesh felenged (visszapattan).
+  // A "Vissza a rádióhoz" gomb növeli a returnNonce-t → F8 felenged + zoomolt, látható rádió-nézet.
   const prevReturnNonceRadio = useRef(returnNonce);
   useEffect(() => {
     if (returnNonce > prevReturnNonceRadio.current) {
-      releaseF8Ref.current?.();
+      returnToRadioViewRef.current?.();
     }
     prevReturnNonceRadio.current = returnNonce;
   }, [returnNonce]);
