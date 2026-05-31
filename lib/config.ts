@@ -211,7 +211,7 @@ export const config: AppConfig = {
   },
   f8Transition: {
     duration: 1.5,
-    overlapHoldSeconds: 5,
+    overlapHoldSeconds: 3,
     overlapAnchorSelector: '#section-overlap',
     newspaperAnchorSelector: '#section-ujsag',
     radioAnchorSelector: '#section-radio'
