@@ -45,26 +45,22 @@ export function createRadioDisplay(): RadioDisplay {
     texture.needsUpdate = true;
   };
 
-  const splitToTwoLines = (text: string, maxWidth: number): string[] => {
-    if (ctx.measureText(text).width <= maxWidth) return [text];
+  // Greedy szó-tördelés az aktuális ctx.font szerint (a hosszú címek több sorba kerülnek)
+  const wrapByWidth = (text: string, maxWidth: number): string[] => {
     const words = text.split(' ');
-    if (words.length < 2) return [text];
-    let best: string[] = [text];
-    let bestDiff = Infinity;
-    for (let i = 1; i < words.length; i++) {
-      const a = words.slice(0, i).join(' ');
-      const b = words.slice(i).join(' ');
-      const wA = ctx.measureText(a).width;
-      const wB = ctx.measureText(b).width;
-      if (wA <= maxWidth && wB <= maxWidth) {
-        const diff = Math.abs(wA - wB);
-        if (diff < bestDiff) {
-          bestDiff = diff;
-          best = [a, b];
-        }
+    const lines: string[] = [];
+    let current = '';
+    for (const word of words) {
+      const candidate = current ? `${current} ${word}` : word;
+      if (current === '' || ctx.measureText(candidate).width <= maxWidth) {
+        current = candidate;
+      } else {
+        lines.push(current);
+        current = word;
       }
     }
-    return best;
+    if (current) lines.push(current);
+    return lines;
   };
 
   const showTrack = (track: Track) => {
@@ -76,14 +72,31 @@ export function createRadioDisplay(): RadioDisplay {
     const ctxAny = ctx as CanvasRenderingContext2D & { letterSpacing?: string };
     ctxAny.letterSpacing = '-4px';
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 60px "Courier New", Courier, monospace';
-    const titleLines = splitToTwoLines(track.title.toUpperCase(), 480);
-    if (titleLines.length === 1) {
-      ctx.fillText(titleLines[0], 256, 60);
-    } else {
-      ctx.fillText(titleLines[0], 256, 35);
-      ctx.fillText(titleLines[1], 256, 95);
+
+    // Cím: a lehető legnagyobb font (≤60px), amivel max 3 sorba tördelve befér a [20,140] sávba.
+    // 20px garantált felső padding; a cím-blokk a sávon belül függőlegesen középre.
+    const TOP_PADDING = 20;
+    const TITLE_BAND_BOTTOM = 140;
+    const MAX_LINES = 3;
+    const MAX_TITLE_WIDTH = 472;
+    const bandHeight = TITLE_BAND_BOTTOM - TOP_PADDING;
+    const titleText = track.title.toUpperCase();
+
+    let titleFont = 60;
+    let titleLines: string[] = [];
+    for (; titleFont >= 28; titleFont -= 2) {
+      ctx.font = `bold ${titleFont}px "Courier New", Courier, monospace`;
+      titleLines = wrapByWidth(titleText, MAX_TITLE_WIDTH);
+      if (titleLines.length <= MAX_LINES && titleLines.length * (titleFont * 1.08) <= bandHeight) break;
     }
+    ctx.font = `bold ${titleFont}px "Courier New", Courier, monospace`;
+
+    const titleLineHeight = titleFont * 1.08;
+    const blockHeight = titleLines.length * titleLineHeight;
+    const blockTop = TOP_PADDING + Math.max(0, (bandHeight - blockHeight) / 2);
+    titleLines.forEach((line, i) => {
+      ctx.fillText(line, 256, blockTop + i * titleLineHeight + titleLineHeight / 2);
+    });
 
     ctxAny.letterSpacing = '-1px';
     ctx.fillStyle = '#9bf0ff';
