@@ -224,51 +224,51 @@ export const config: AppConfig = {
   sections: {
     S1: {
       bevezeto: [
-        '/img/section1/overlay1.png',
-        '/img/section1/overlay2.png',
-        '/img/section1/overlay3.png',
-        '/img/section1/overlay4.png',
-        '/img/section1/overlay5.png'
+        '/img/overlap1/1.png',
+        '/img/overlap1/2.png',
+        '/img/overlap1/3.png',
+        '/img/overlap1/4.png',
+        '/img/overlap1/5.png'
       ],
       oldalak: ['/img/section1/elso.png', '/img/section1/masodik.png', '/img/section1/harmadik.png', '/img/section1/negyedik.png', '/img/section1/otodik.png', '/img/section1/hatodik.png']
     },
     S2: {
       bevezeto: [
-        '/img/section2/overlay1.png',
-        '/img/section2/overlay2.png',
-        '/img/section2/overlay3.png',
-        '/img/section2/overlay4.png',
-        '/img/section2/overlay5.png'
+        '/img/overlap2/1.png',
+        '/img/overlap2/2.png',
+        '/img/overlap2/3.png',
+        '/img/overlap2/4.png',
+        '/img/overlap2/5.png'
       ],
       oldalak: ['/img/section2/elso.png', '/img/section2/masodik.png', '/img/section2/harmadik.png', '/img/section2/negyedik.png', '/img/section2/otodik.png', '/img/section2/hatodik.png']
     },
     S3: {
       bevezeto: [
-        '/img/section3/overlay1.png',
-        '/img/section3/overlay2.png',
-        '/img/section3/overlay3.png',
-        '/img/section3/overlay4.png',
-        '/img/section3/overlay5.png'
+        '/img/overlap3/1.png',
+        '/img/overlap3/2.png',
+        '/img/overlap3/3.png',
+        '/img/overlap3/4.png',
+        '/img/overlap3/5.png'
       ],
       oldalak: ['/img/section3/elso.png', '/img/section3/masodik.png', '/img/section3/harmadik.png', '/img/section3/negyedik.png', '/img/section3/otodik.png', '/img/section3/hatodik.png']
     },
     S4: {
       bevezeto: [
-        '/img/section4/overlay1.png',
-        '/img/section4/overlay2.png',
-        '/img/section4/overlay3.png',
-        '/img/section4/overlay4.png',
-        '/img/section4/overlay5.png'
+        '/img/overlap4/1.png',
+        '/img/overlap4/2.png',
+        '/img/overlap4/3.png',
+        '/img/overlap4/4.png',
+        '/img/overlap4/5.png'
       ],
       oldalak: ['/img/section4/elso.png', '/img/section4/masodik.png', '/img/section4/harmadik.png', '/img/section4/negyedik.png', '/img/section4/otodik.png', '/img/section4/hatodik.png']
     },
     S5: {
       bevezeto: [
-        '/img/section5/overlay1.png',
-        '/img/section5/overlay2.png',
-        '/img/section5/overlay3.png',
-        '/img/section5/overlay4.png',
-        '/img/section5/overlay5.png'
+        '/img/overlap5/1.png',
+        '/img/overlap5/2.png',
+        '/img/overlap5/3.png',
+        '/img/overlap5/4.png',
+        '/img/overlap5/5.png'
       ],
       oldalak: ['/img/section5/elso.png', '/img/section5/masodik.png', '/img/section5/harmadik.png', '/img/section5/negyedik.png', '/img/section5/otodik.png', '/img/section5/hatodik.png']
     }
