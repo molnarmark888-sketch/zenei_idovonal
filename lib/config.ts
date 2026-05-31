@@ -59,6 +59,9 @@ export type F8TransitionConfig = {
   duration: number;
   radioFlyZ: number;
   parallaxAnchorSelector: string;
+  overlapAnchorSelector: string;
+  newspaperAnchorSelector: string;
+  radioAnchorSelector: string;
 };
 
 export type SectionEntryAnim = {
@@ -91,6 +94,8 @@ export type SectionConfig = {
   // Rövid parallax intró rétegei (a section-asset-ekből)
   hatter: { src: string; blurRadius: number; opacityBase: number; scale: number } | null;
   retegek: SectionLayer[];
+  // Az F8 utáni overlap-intró fullscreen képei (egymásra csúsznak, auto-play)
+  bevezeto: string[];
   // A lapozható újság lap-képei (FullHD JPG-k), pl. ['/img/section1/oldal1.jpg', ...]; üres = még nincs lap
   oldalak: string[];
 };
@@ -234,7 +239,10 @@ export const config: AppConfig = {
   f8Transition: {
     duration: 1.5,
     radioFlyZ: -25,
-    parallaxAnchorSelector: '#section-parallax'
+    parallaxAnchorSelector: '#section-parallax',
+    overlapAnchorSelector: '#section-overlap',
+    newspaperAnchorSelector: '#section-ujsag',
+    radioAnchorSelector: '#section-radio'
   },
   // FullHD fullscreen újság: egy lap = a képernyő fele (960×1080), két lap = teljes FullHD (1920×1080)
   newspaper: {
@@ -307,6 +315,13 @@ export const config: AppConfig = {
           belepo: { fromY: 300, fromOpacity: 0, fromScale: 0.9, duration: 0.6, ease: 'power4.out', sorrend: 2 }
         }
       ],
+      bevezeto: [
+        '/img/section1/overlay1.png',
+        '/img/section1/overlay2.png',
+        '/img/section1/overlay3.png',
+        '/img/section1/overlay4.png',
+        '/img/section1/overlay5.png'
+      ],
       oldalak: ['/img/section1/elso.png', '/img/section1/masodik.png', '/img/section1/harmadik.png', '/img/section1/negyedik.png', '/img/section1/otodik.png', '/img/section1/hatodik.png']
     },
     S2: {
@@ -368,6 +383,13 @@ export const config: AppConfig = {
           parallaxIntenzitas: 1.4,
           belepo: { fromX: 250, fromY: 100, fromOpacity: 0, duration: 0.5, ease: 'power4.out', sorrend: 2 }
         }
+      ],
+      bevezeto: [
+        '/img/section2/overlay1.png',
+        '/img/section2/overlay2.png',
+        '/img/section2/overlay3.png',
+        '/img/section2/overlay4.png',
+        '/img/section2/overlay5.png'
       ],
       oldalak: ['/img/section2/elso.png', '/img/section2/masodik.png', '/img/section2/harmadik.png', '/img/section2/negyedik.png', '/img/section2/otodik.png', '/img/section2/hatodik.png']
     },
@@ -431,6 +453,13 @@ export const config: AppConfig = {
           belepo: { fromY: 250, fromOpacity: 0, duration: 0.5, ease: 'power4.out', sorrend: 2 }
         }
       ],
+      bevezeto: [
+        '/img/section3/overlay1.png',
+        '/img/section3/overlay2.png',
+        '/img/section3/overlay3.png',
+        '/img/section3/overlay4.png',
+        '/img/section3/overlay5.png'
+      ],
       oldalak: ['/img/section3/elso.png', '/img/section3/masodik.png', '/img/section3/harmadik.png', '/img/section3/negyedik.png', '/img/section3/otodik.png', '/img/section3/hatodik.png']
     },
     S4: {
@@ -493,6 +522,13 @@ export const config: AppConfig = {
           belepo: { fromX: 200, fromOpacity: 0, duration: 0.5, ease: 'power4.out', sorrend: 2 }
         }
       ],
+      bevezeto: [
+        '/img/section4/overlay1.png',
+        '/img/section4/overlay2.png',
+        '/img/section4/overlay3.png',
+        '/img/section4/overlay4.png',
+        '/img/section4/overlay5.png'
+      ],
       oldalak: ['/img/section4/elso.png', '/img/section4/masodik.png', '/img/section4/harmadik.png', '/img/section4/negyedik.png', '/img/section4/otodik.png', '/img/section4/hatodik.png']
     },
     S5: {
@@ -554,6 +590,13 @@ export const config: AppConfig = {
           parallaxIntenzitas: 1.3,
           belepo: { fromX: 250, fromOpacity: 0, duration: 0.6, ease: 'power4.out', sorrend: 2 }
         }
+      ],
+      bevezeto: [
+        '/img/section5/overlay1.png',
+        '/img/section5/overlay2.png',
+        '/img/section5/overlay3.png',
+        '/img/section5/overlay4.png',
+        '/img/section5/overlay5.png'
       ],
       oldalak: ['/img/section5/elso.png', '/img/section5/masodik.png', '/img/section5/harmadik.png', '/img/section5/negyedik.png', '/img/section5/otodik.png', '/img/section5/hatodik.png']
     }
