@@ -8,6 +8,7 @@ import { config } from '@/lib/config';
 export function NewspaperFlip({ sectionId, returnNonce = 0 }: { sectionId: number; returnNonce?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const pageFlipRef = useRef<import('page-flip').PageFlip | null>(null);
+  const flipAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const sectionKey = `S${sectionId}` as keyof typeof config.sections;
   const oldalak = config.sections[sectionKey].oldalak;
@@ -35,6 +36,19 @@ export function NewspaperFlip({ sectionId, returnNonce = 0 }: { sectionId: numbe
         drawShadow: true
       });
 
+      // Lapozás-hang: a 'changeState' → 'flipping' a lapozás kezdetén szól.
+      // Külön Audio elem, a fő zene (RadioExperience <audio>) közben szól tovább.
+      const flipAudio = new Audio(config.newspaper.flipSound);
+      flipAudio.volume = 0.6;
+      flipAudioRef.current = flipAudio;
+
+      pf.on('changeState', (e) => {
+        if (e.data === 'flipping') {
+          flipAudio.currentTime = 0;
+          flipAudio.play().catch(() => {});
+        }
+      });
+
       pf.loadFromImages([...oldalak]);
       pageFlipRef.current = pf;
     })();
@@ -43,6 +57,8 @@ export function NewspaperFlip({ sectionId, returnNonce = 0 }: { sectionId: numbe
       cancelled = true;
       pageFlipRef.current?.destroy();
       pageFlipRef.current = null;
+      flipAudioRef.current?.pause();
+      flipAudioRef.current = null;
     };
   }, [sectionId, oldalak]);
 

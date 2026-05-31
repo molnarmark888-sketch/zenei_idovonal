@@ -57,6 +57,8 @@ export type KnobConfig = {
 
 export type F8TransitionConfig = {
   duration: number;
+  // Az utolsó overlap-kép és az újság megjelenése közti várakozás (mp)
+  overlapHoldSeconds: number;
   overlapAnchorSelector: string;
   newspaperAnchorSelector: string;
   radioAnchorSelector: string;
@@ -79,6 +81,8 @@ export type NewspaperConfig = {
   minHeight: number;
   maxHeight: number;
   flippingTime: number;
+  // Lapozáskor lejátszott papír-hang (a zene közben szól tovább)
+  flipSound: string;
 };
 
 export type AppConfig = {
@@ -207,6 +211,7 @@ export const config: AppConfig = {
   },
   f8Transition: {
     duration: 1.5,
+    overlapHoldSeconds: 5,
     overlapAnchorSelector: '#section-overlap',
     newspaperAnchorSelector: '#section-ujsag',
     radioAnchorSelector: '#section-radio'
@@ -219,7 +224,8 @@ export const config: AppConfig = {
     maxWidth: 960,
     minHeight: 360,
     maxHeight: 1080,
-    flippingTime: 1200
+    flippingTime: 800,
+    flipSound: '/sound/papir.wav'
   },
   sections: {
     S1: {

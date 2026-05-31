@@ -18,6 +18,7 @@ export function OverlapSections({
   const containerRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<Array<HTMLImageElement | null>>([]);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const holdCallRef = useRef<gsap.core.Tween | null>(null);
 
   // Stabil callback-mirror, hogy a fő timeline-effect ne ragadjon stale closure-be,
   // és ne fusson újra a callback-identitás változására.
@@ -48,7 +49,10 @@ export function OverlapSections({
       const tl = gsap.timeline({
         defaults: { ease: 'power2.inOut' },
         onComplete: () => {
-          onIntroCompleteRef.current?.();
+          // Az utolsó overlap-kép után overlapHoldSeconds várakozás, majd tovább az újságra.
+          holdCallRef.current = gsap.delayedCall(config.f8Transition.overlapHoldSeconds, () => {
+            onIntroCompleteRef.current?.();
+          });
         }
       });
 
@@ -61,6 +65,8 @@ export function OverlapSections({
     }, containerRef);
 
     return () => {
+      holdCallRef.current?.kill();
+      holdCallRef.current = null;
       tlRef.current = null;
       ctx.revert();
     };
