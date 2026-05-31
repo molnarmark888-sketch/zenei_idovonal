@@ -307,7 +307,7 @@ export const config: AppConfig = {
           belepo: { fromY: 300, fromOpacity: 0, fromScale: 0.9, duration: 0.6, ease: 'power4.out', sorrend: 2 }
         }
       ],
-      oldalak: ['/img/section1/oldal1.png', '/img/section1/oldal2.png', '/img/section1/oldal3.png', '/img/section1/oldal4.png']
+      oldalak: ['/img/section1/elso.png', '/img/section1/masodik.png', '/img/section1/harmadik.png', '/img/section1/negyedik.png', '/img/section1/otodik.png', '/img/section1/hatodik.png']
     },
     S2: {
       hatter: { src: '/img/section2/hatter2.png', blurRadius: 1.5, opacityBase: 1, scale: 1.05 },
@@ -369,7 +369,7 @@ export const config: AppConfig = {
           belepo: { fromX: 250, fromY: 100, fromOpacity: 0, duration: 0.5, ease: 'power4.out', sorrend: 2 }
         }
       ],
-      oldalak: []
+      oldalak: ['/img/section2/elso.png', '/img/section2/masodik.png', '/img/section2/harmadik.png', '/img/section2/negyedik.png', '/img/section2/otodik.png', '/img/section2/hatodik.png']
     },
     S3: {
       hatter: { src: '/img/section3/hatter3.png', blurRadius: 2, opacityBase: 1, scale: 1.08 },
@@ -431,7 +431,7 @@ export const config: AppConfig = {
           belepo: { fromY: 250, fromOpacity: 0, duration: 0.5, ease: 'power4.out', sorrend: 2 }
         }
       ],
-      oldalak: []
+      oldalak: ['/img/section3/elso.png', '/img/section3/masodik.png', '/img/section3/harmadik.png', '/img/section3/negyedik.png', '/img/section3/otodik.png', '/img/section3/hatodik.png']
     },
     S4: {
       hatter: { src: '/img/section4/hatter4.png', blurRadius: 2, opacityBase: 1, scale: 1.06 },
@@ -493,7 +493,7 @@ export const config: AppConfig = {
           belepo: { fromX: 200, fromOpacity: 0, duration: 0.5, ease: 'power4.out', sorrend: 2 }
         }
       ],
-      oldalak: []
+      oldalak: ['/img/section4/elso.png', '/img/section4/masodik.png', '/img/section4/harmadik.png', '/img/section4/negyedik.png', '/img/section4/otodik.png', '/img/section4/hatodik.png']
     },
     S5: {
       hatter: { src: '/img/section5/hatter5.png', blurRadius: 1.5, opacityBase: 1, scale: 1.05 },
@@ -555,7 +555,7 @@ export const config: AppConfig = {
           belepo: { fromX: 250, fromOpacity: 0, duration: 0.6, ease: 'power4.out', sorrend: 2 }
         }
       ],
-      oldalak: []
+      oldalak: ['/img/section5/elso.png', '/img/section5/masodik.png', '/img/section5/harmadik.png', '/img/section5/negyedik.png', '/img/section5/otodik.png', '/img/section5/hatodik.png']
     }
   }
 };
