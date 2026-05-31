@@ -57,41 +57,15 @@ export type KnobConfig = {
 
 export type F8TransitionConfig = {
   duration: number;
-  radioFlyZ: number;
-  parallaxAnchorSelector: string;
-};
-
-export type SectionEntryAnim = {
-  fromX?: number;
-  fromY?: number;
-  fromScale?: number;
-  fromRotate?: number;
-  fromOpacity?: number;
-  duration: number;
-  ease: string;
-  sorrend: number;
-};
-
-export type SectionLayer = {
-  name: string;
-  src: string;
-  tavolsag: number;
-  oldal: 'bal' | 'jobb' | 'kozep';
-  fuggoleges: 'fold' | 'kozep' | 'felso';
-  magassag: number;
-  eltolas: number;
-  yEltolas: number;
-  blurRadius: number;
-  opacityBase: number;
-  parallaxIntenzitas: number;
-  belepo: SectionEntryAnim;
+  overlapAnchorSelector: string;
+  newspaperAnchorSelector: string;
+  radioAnchorSelector: string;
 };
 
 export type SectionConfig = {
-  // Rövid parallax intró rétegei (a section-asset-ekből)
-  hatter: { src: string; blurRadius: number; opacityBase: number; scale: number } | null;
-  retegek: SectionLayer[];
-  // A lapozható újság lap-képei (FullHD JPG-k), pl. ['/img/section1/oldal1.jpg', ...]; üres = még nincs lap
+  // Az F8 utáni overlap-intró fullscreen képei (egymásra csúsznak, auto-play)
+  bevezeto: string[];
+  // A lapozható újság lap-képei (FullHD JPG/PNG); üres = még nincs lap
   oldalak: string[];
 };
 
@@ -233,8 +207,9 @@ export const config: AppConfig = {
   },
   f8Transition: {
     duration: 1.5,
-    radioFlyZ: -25,
-    parallaxAnchorSelector: '#section-parallax'
+    overlapAnchorSelector: '#section-overlap',
+    newspaperAnchorSelector: '#section-ujsag',
+    radioAnchorSelector: '#section-radio'
   },
   // FullHD fullscreen újság: egy lap = a képernyő fele (960×1080), két lap = teljes FullHD (1920×1080)
   newspaper: {
@@ -244,316 +219,56 @@ export const config: AppConfig = {
     maxWidth: 960,
     minHeight: 360,
     maxHeight: 1080,
-    flippingTime: 800
+    flippingTime: 1200
   },
   sections: {
     S1: {
-      hatter: { src: '/img/section1/also.png', blurRadius: 1, opacityBase: 1, scale: 1.05 },
-      retegek: [
-        {
-          name: 'felso',
-          src: '/img/section1/felso.png',
-          tavolsag: 90,
-          oldal: 'kozep',
-          fuggoleges: 'felso',
-          magassag: 35,
-          eltolas: 0,
-          yEltolas: 0,
-          blurRadius: 1.5,
-          opacityBase: 1,
-          parallaxIntenzitas: 0.6,
-          belepo: { fromY: -120, fromOpacity: 0, duration: 0.6, ease: 'power2.out', sorrend: 0 }
-        },
-        {
-          name: 'tabla_bal',
-          src: '/img/section1/tabla_bal.png',
-          tavolsag: 50,
-          oldal: 'bal',
-          fuggoleges: 'kozep',
-          magassag: 22,
-          eltolas: 40,
-          yEltolas: -40,
-          blurRadius: 0.5,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.0,
-          belepo: { fromX: -200, fromOpacity: 0, duration: 0.5, ease: 'power3.out', sorrend: 1 }
-        },
-        {
-          name: 'jobbsarok',
-          src: '/img/section1/jobbsarok.png',
-          tavolsag: 40,
-          oldal: 'jobb',
-          fuggoleges: 'kozep',
-          magassag: 30,
-          eltolas: -30,
-          yEltolas: 0,
-          blurRadius: 0.3,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.1,
-          belepo: { fromX: 200, fromOpacity: 0, duration: 0.5, ease: 'power3.out', sorrend: 1 }
-        },
-        {
-          name: 'kuka',
-          src: '/img/section1/kuka.png',
-          tavolsag: 20,
-          oldal: 'kozep',
-          fuggoleges: 'fold',
-          magassag: 35,
-          eltolas: 0,
-          yEltolas: 0,
-          blurRadius: 0,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.3,
-          belepo: { fromY: 300, fromOpacity: 0, fromScale: 0.9, duration: 0.6, ease: 'power4.out', sorrend: 2 }
-        }
+      bevezeto: [
+        '/img/overlap1/1.png',
+        '/img/overlap1/2.png',
+        '/img/overlap1/3.png',
+        '/img/overlap1/4.png',
+        '/img/overlap1/5.png'
       ],
       oldalak: ['/img/section1/elso.png', '/img/section1/masodik.png', '/img/section1/harmadik.png', '/img/section1/negyedik.png', '/img/section1/otodik.png', '/img/section1/hatodik.png']
     },
     S2: {
-      hatter: { src: '/img/section2/hatter2.png', blurRadius: 1.5, opacityBase: 1, scale: 1.05 },
-      retegek: [
-        {
-          name: 'lampak',
-          src: '/img/section2/lampak.png',
-          tavolsag: 80,
-          oldal: 'kozep',
-          fuggoleges: 'felso',
-          magassag: 40,
-          eltolas: 0,
-          yEltolas: 0,
-          blurRadius: 1,
-          opacityBase: 1,
-          parallaxIntenzitas: 0.7,
-          belepo: { fromY: -150, fromOpacity: 0, duration: 0.6, ease: 'power2.out', sorrend: 0 }
-        },
-        {
-          name: 'bench',
-          src: '/img/section2/bench.png',
-          tavolsag: 45,
-          oldal: 'kozep',
-          fuggoleges: 'fold',
-          magassag: 30,
-          eltolas: 0,
-          yEltolas: 0,
-          blurRadius: 0.3,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.0,
-          belepo: { fromY: 200, fromOpacity: 0, duration: 0.5, ease: 'power3.out', sorrend: 1 }
-        },
-        {
-          name: 'boom',
-          src: '/img/section2/boom.png',
-          tavolsag: 30,
-          oldal: 'kozep',
-          fuggoleges: 'fold',
-          magassag: 16,
-          eltolas: 0,
-          yEltolas: -80,
-          blurRadius: 0,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.2,
-          belepo: { fromScale: 0.6, fromOpacity: 0, duration: 0.5, ease: 'back.out(1.6)', sorrend: 2 }
-        },
-        {
-          name: 'cipo',
-          src: '/img/section2/cipo.png',
-          tavolsag: 10,
-          oldal: 'jobb',
-          fuggoleges: 'fold',
-          magassag: 25,
-          eltolas: -40,
-          yEltolas: 40,
-          blurRadius: 0,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.4,
-          belepo: { fromX: 250, fromY: 100, fromOpacity: 0, duration: 0.5, ease: 'power4.out', sorrend: 2 }
-        }
+      bevezeto: [
+        '/img/overlap2/1.png',
+        '/img/overlap2/2.png',
+        '/img/overlap2/3.png',
+        '/img/overlap2/4.png',
+        '/img/overlap2/5.png'
       ],
       oldalak: ['/img/section2/elso.png', '/img/section2/masodik.png', '/img/section2/harmadik.png', '/img/section2/negyedik.png', '/img/section2/otodik.png', '/img/section2/hatodik.png']
     },
     S3: {
-      hatter: { src: '/img/section3/hatter3.png', blurRadius: 2, opacityBase: 1, scale: 1.08 },
-      retegek: [
-        {
-          name: 'autohat',
-          src: '/img/section3/autohat.png',
-          tavolsag: 55,
-          oldal: 'bal',
-          fuggoleges: 'fold',
-          magassag: 45,
-          eltolas: -40,
-          yEltolas: 0,
-          blurRadius: 0.5,
-          opacityBase: 1,
-          parallaxIntenzitas: 0.9,
-          belepo: { fromX: -300, fromOpacity: 0, duration: 0.7, ease: 'power3.out', sorrend: 0 }
-        },
-        {
-          name: 'autoelso',
-          src: '/img/section3/autoelso.png',
-          tavolsag: 35,
-          oldal: 'jobb',
-          fuggoleges: 'fold',
-          magassag: 50,
-          eltolas: 40,
-          yEltolas: 0,
-          blurRadius: 0,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.1,
-          belepo: { fromX: 300, fromOpacity: 0, duration: 0.7, ease: 'power3.out', sorrend: 0 }
-        },
-        {
-          name: 'felirat',
-          src: '/img/section3/felirat.png',
-          tavolsag: 25,
-          oldal: 'kozep',
-          fuggoleges: 'kozep',
-          magassag: 18,
-          eltolas: 0,
-          yEltolas: 60,
-          blurRadius: 0,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.2,
-          belepo: { fromScale: 1.4, fromOpacity: 0, duration: 0.5, ease: 'power2.out', sorrend: 1 }
-        },
-        {
-          name: 'cipo',
-          src: '/img/section3/cipo.png',
-          tavolsag: 10,
-          oldal: 'bal',
-          fuggoleges: 'fold',
-          magassag: 24,
-          eltolas: 60,
-          yEltolas: 40,
-          blurRadius: 0,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.4,
-          belepo: { fromY: 250, fromOpacity: 0, duration: 0.5, ease: 'power4.out', sorrend: 2 }
-        }
+      bevezeto: [
+        '/img/overlap3/1.png',
+        '/img/overlap3/2.png',
+        '/img/overlap3/3.png',
+        '/img/overlap3/4.png',
+        '/img/overlap3/5.png'
       ],
       oldalak: ['/img/section3/elso.png', '/img/section3/masodik.png', '/img/section3/harmadik.png', '/img/section3/negyedik.png', '/img/section3/otodik.png', '/img/section3/hatodik.png']
     },
     S4: {
-      hatter: { src: '/img/section4/hatter4.png', blurRadius: 2, opacityBase: 1, scale: 1.06 },
-      retegek: [
-        {
-          name: 'lancb',
-          src: '/img/section4/lancb.png',
-          tavolsag: 70,
-          oldal: 'bal',
-          fuggoleges: 'felso',
-          magassag: 55,
-          eltolas: 0,
-          yEltolas: 0,
-          blurRadius: 1,
-          opacityBase: 1,
-          parallaxIntenzitas: 0.8,
-          belepo: { fromY: -200, fromOpacity: 0, duration: 0.6, ease: 'power2.out', sorrend: 0 }
-        },
-        {
-          name: 'lancj',
-          src: '/img/section4/lancj.png',
-          tavolsag: 70,
-          oldal: 'jobb',
-          fuggoleges: 'felso',
-          magassag: 55,
-          eltolas: 0,
-          yEltolas: 0,
-          blurRadius: 1,
-          opacityBase: 1,
-          parallaxIntenzitas: 0.8,
-          belepo: { fromY: -200, fromOpacity: 0, duration: 0.6, ease: 'power2.out', sorrend: 0 }
-        },
-        {
-          name: 'ember',
-          src: '/img/section4/ember.png',
-          tavolsag: 35,
-          oldal: 'kozep',
-          fuggoleges: 'fold',
-          magassag: 75,
-          eltolas: 0,
-          yEltolas: 0,
-          blurRadius: 0,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.0,
-          belepo: { fromY: 250, fromScale: 0.85, fromOpacity: 0, duration: 0.7, ease: 'power4.out', sorrend: 1 }
-        },
-        {
-          name: 'kar',
-          src: '/img/section4/kar.png',
-          tavolsag: 10,
-          oldal: 'jobb',
-          fuggoleges: 'fold',
-          magassag: 40,
-          eltolas: -20,
-          yEltolas: 60,
-          blurRadius: 0,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.4,
-          belepo: { fromX: 200, fromOpacity: 0, duration: 0.5, ease: 'power4.out', sorrend: 2 }
-        }
+      bevezeto: [
+        '/img/overlap4/1.png',
+        '/img/overlap4/2.png',
+        '/img/overlap4/3.png',
+        '/img/overlap4/4.png',
+        '/img/overlap4/5.png'
       ],
       oldalak: ['/img/section4/elso.png', '/img/section4/masodik.png', '/img/section4/harmadik.png', '/img/section4/negyedik.png', '/img/section4/otodik.png', '/img/section4/hatodik.png']
     },
     S5: {
-      hatter: { src: '/img/section5/hatter5.png', blurRadius: 1.5, opacityBase: 1, scale: 1.05 },
-      retegek: [
-        {
-          name: 'kep1',
-          src: '/img/section5/kep1.png',
-          tavolsag: 55,
-          oldal: 'bal',
-          fuggoleges: 'felso',
-          magassag: 28,
-          eltolas: 60,
-          yEltolas: 60,
-          blurRadius: 0.4,
-          opacityBase: 1,
-          parallaxIntenzitas: 0.9,
-          belepo: { fromX: -180, fromOpacity: 0, duration: 0.5, ease: 'power3.out', sorrend: 0 }
-        },
-        {
-          name: 'kep2',
-          src: '/img/section5/kep2.png',
-          tavolsag: 50,
-          oldal: 'bal',
-          fuggoleges: 'fold',
-          magassag: 26,
-          eltolas: 80,
-          yEltolas: -60,
-          blurRadius: 0.4,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.0,
-          belepo: { fromX: -180, fromOpacity: 0, duration: 0.5, ease: 'power3.out', sorrend: 1 }
-        },
-        {
-          name: 'fust',
-          src: '/img/section5/fust.png',
-          tavolsag: 30,
-          oldal: 'kozep',
-          fuggoleges: 'kozep',
-          magassag: 50,
-          eltolas: 0,
-          yEltolas: 0,
-          blurRadius: 2,
-          opacityBase: 0.7,
-          parallaxIntenzitas: 1.1,
-          belepo: { fromScale: 0.8, fromOpacity: 0, duration: 0.8, ease: 'power1.out', sorrend: 1 }
-        },
-        {
-          name: 'beugro',
-          src: '/img/section5/beugro.png',
-          tavolsag: 10,
-          oldal: 'jobb',
-          fuggoleges: 'fold',
-          magassag: 70,
-          eltolas: -20,
-          yEltolas: 0,
-          blurRadius: 0,
-          opacityBase: 1,
-          parallaxIntenzitas: 1.3,
-          belepo: { fromX: 250, fromOpacity: 0, duration: 0.6, ease: 'power4.out', sorrend: 2 }
-        }
+      bevezeto: [
+        '/img/overlap5/1.png',
+        '/img/overlap5/2.png',
+        '/img/overlap5/3.png',
+        '/img/overlap5/4.png',
+        '/img/overlap5/5.png'
       ],
       oldalak: ['/img/section5/elso.png', '/img/section5/masodik.png', '/img/section5/harmadik.png', '/img/section5/negyedik.png', '/img/section5/otodik.png', '/img/section5/hatodik.png']
     }

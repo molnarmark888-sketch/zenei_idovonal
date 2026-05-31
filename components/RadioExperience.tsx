@@ -18,7 +18,13 @@ const DRAG_THRESHOLD_PX = 4;
 type DragMode = 'idle' | 'cameraOrbit' | 'hang1' | 'hang2';
 type FHoldMode = null | 'F3' | 'F4' | 'F5' | 'F6';
 
-export function RadioExperience({ onF8Activate }: { onF8Activate?: (sectionId: number) => void }) {
+export function RadioExperience({
+  onF8Activate,
+  returnNonce = 0
+}: {
+  onF8Activate?: (sectionId: number) => void;
+  returnNonce?: number;
+}) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentTrackRef = useRef<Track>(defaultTrack);
@@ -42,6 +48,8 @@ export function RadioExperience({ onF8Activate }: { onF8Activate?: (sectionId: n
   useEffect(() => {
     onF8ActivateRef.current = onF8Activate;
   }, [onF8Activate]);
+
+  const releaseF8Ref = useRef<(() => void) | null>(null);
 
   const [hudText, setHudText] = useState<string | null>(null);
   const hudTimeoutRef = useRef<number | null>(null);
@@ -293,6 +301,40 @@ export function RadioExperience({ onF8Activate }: { onF8Activate?: (sectionId: n
       });
     };
 
+    // F8 = press-and-hold: lenyomódik és úgy is marad (nem a drag.pressedMesh-be kerül,
+    // így a pointerup pressRelease()-e NEM engedi fel). Csak a returnNonce engedi vissza.
+    let heldMesh: THREE.Mesh | null = null;
+
+    const pressDownHold = (obj: THREE.Mesh) => {
+      if (!restY.has(obj)) {
+        restY.set(obj, obj.position.y);
+      }
+      const baseY = restY.get(obj) as number;
+      heldMesh = obj;
+      gsap.killTweensOf(obj.position);
+      gsap.to(obj.position, {
+        y: baseY - 0.007,
+        duration: 0.12,
+        ease: 'power2.out'
+      });
+    };
+
+    const releaseHeld = () => {
+      if (!heldMesh) return;
+      const obj = heldMesh;
+      heldMesh = null;
+      const baseY = restY.get(obj);
+      if (baseY === undefined) return;
+      gsap.killTweensOf(obj.position);
+      gsap.to(obj.position, {
+        y: baseY,
+        duration: 0.12,
+        ease: 'power2.in'
+      });
+    };
+
+    releaseF8Ref.current = releaseHeld;
+
     const startF8Transition = () => {
       onF8ActivateRef.current?.(selectedSectionRef.current);
 
@@ -301,7 +343,7 @@ export function RadioExperience({ onF8Activate }: { onF8Activate?: (sectionId: n
           const lenisInstance = lenisRef.current;
           lenisInstance?.resize();
 
-          const anchor = document.querySelector(config.f8Transition.parallaxAnchorSelector);
+          const anchor = document.querySelector(config.f8Transition.overlapAnchorSelector);
           if (!(anchor instanceof HTMLElement)) return;
           const targetY = anchor.getBoundingClientRect().top + window.scrollY;
 
@@ -355,7 +397,7 @@ export function RadioExperience({ onF8Activate }: { onF8Activate?: (sectionId: n
         return;
       }
       if (name === 'F8') {
-        pressDown(obj);
+        pressDownHold(obj);
         showHud('▶▶▶');
         startF8Transition();
         return;
@@ -545,6 +587,15 @@ export function RadioExperience({ onF8Activate }: { onF8Activate?: (sectionId: n
       dispose();
     };
   }, [playSrc]);
+
+  // A "Vissza a rádióhoz" gomb növeli a returnNonce-t → az F8 mesh felenged (visszapattan).
+  const prevReturnNonceRadio = useRef(returnNonce);
+  useEffect(() => {
+    if (returnNonce > prevReturnNonceRadio.current) {
+      releaseF8Ref.current?.();
+    }
+    prevReturnNonceRadio.current = returnNonce;
+  }, [returnNonce]);
 
   useEffect(() => {
     const audio = audioRef.current;

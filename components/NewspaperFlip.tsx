@@ -4,22 +4,23 @@ import { config } from '@/lib/config';
 
 // A lapozható évtized-újság: StPageFlip (page-flip), kész lap-képekből (oldalak).
 // Egy lap = a FullHD képernyő fele (960×1080), két lap egymás mellett = teljes FullHD.
-export function NewspaperFlip({ sectionId }: { sectionId: number }) {
+// A returnNonce NÖVELÉSÉRE (vissza-gomb) az újság visszalapoz az 1. oldalra.
+export function NewspaperFlip({ sectionId, returnNonce = 0 }: { sectionId: number; returnNonce?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const pageFlipRef = useRef<import('page-flip').PageFlip | null>(null);
 
   const sectionKey = `S${sectionId}` as keyof typeof config.sections;
   const oldalak = config.sections[sectionKey].oldalak;
 
   useEffect(() => {
     if (oldalak.length === 0) return;
-    let pageFlip: import('page-flip').PageFlip | null = null;
     let cancelled = false;
 
     (async () => {
       const { PageFlip } = await import('page-flip');
       if (cancelled || !containerRef.current) return;
 
-      pageFlip = new PageFlip(containerRef.current, {
+      const pf = new PageFlip(containerRef.current, {
         width: config.newspaper.width,
         height: config.newspaper.height,
         size: 'stretch',
@@ -34,14 +35,26 @@ export function NewspaperFlip({ sectionId }: { sectionId: number }) {
         drawShadow: true
       });
 
-      pageFlip.loadFromImages([...oldalak]);
+      pf.loadFromImages([...oldalak]);
+      pageFlipRef.current = pf;
     })();
 
     return () => {
       cancelled = true;
-      pageFlip?.destroy();
+      pageFlipRef.current?.destroy();
+      pageFlipRef.current = null;
     };
   }, [sectionId, oldalak]);
+
+  // A "Vissza a rádióhoz" gomb növeli a returnNonce-t → visszalapozás az 1. oldalra.
+  // prev-ref guard: mountkor NEM lapozunk (akkor is, ha returnNonce már > 0).
+  const prevReturnNonce = useRef(returnNonce);
+  useEffect(() => {
+    if (returnNonce > prevReturnNonce.current) {
+      pageFlipRef.current?.flip(0);
+    }
+    prevReturnNonce.current = returnNonce;
+  }, [returnNonce]);
 
   if (oldalak.length === 0) {
     return (
