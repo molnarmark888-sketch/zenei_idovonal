@@ -219,7 +219,7 @@ export const config: AppConfig = {
     maxWidth: 960,
     minHeight: 360,
     maxHeight: 1080,
-    flippingTime: 800
+    flippingTime: 1200
   },
   sections: {
     S1: {
