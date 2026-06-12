@@ -276,7 +276,7 @@ export const config: AppConfig = {
         '/img/overlap5/4.png',
         '/img/overlap5/5.png'
       ],
-      oldalak: ['/img/section5/elso.png', '/img/section5/masodik.png', '/img/section5/harmadik.png', '/img/section5/negyedik.png', '/img/section5/otodik.png', '/img/section5/hatodik.png']
+      oldalak: ['/img/section5/elso.png', '/img/section5/masodik.png', '/img/section5/harmadik.png', '/img/section5/negyedik.png', '/img/section5/otodik.png', '/img/section5/hatodik.png', '/img/section5/oldal7.png', '/img/section5/oldal8.png']
     }
   }
 };
