@@ -246,7 +246,7 @@ export const config: AppConfig = {
         '/img/overlap2/4.png',
         '/img/overlap2/5.png'
       ],
-      oldalak: ['/img/section2/elso.png', '/img/section2/masodik.png', '/img/section2/harmadik.png', '/img/section2/negyedik.png', '/img/section2/otodik.png', '/img/section2/hatodik.png']
+      oldalak: ['/img/section2/elso.png', '/img/section2/masodik.png', '/img/section2/harmadik.png', '/img/section2/negyedik.png', '/img/section2/otodik.png', '/img/section2/hatodik.png', '/img/section2/hetedik.png', '/img/section2/nyolcadik.png']
     },
     S3: {
       bevezeto: [
@@ -266,7 +266,7 @@ export const config: AppConfig = {
         '/img/overlap4/4.png',
         '/img/overlap4/5.png'
       ],
-      oldalak: ['/img/section4/elso.png', '/img/section4/masodik.png', '/img/section4/harmadik.png', '/img/section4/negyedik.png', '/img/section4/otodik.png', '/img/section4/hatodik.png']
+      oldalak: ['/img/section4/elso.png', '/img/section4/masodik.png', '/img/section4/harmadik.png', '/img/section4/negyedik.png', '/img/section4/otodik.png', '/img/section4/hatodik.png', '/img/section4/hetedik.png', '/img/section4/nyolcadik.png']
     },
     S5: {
       bevezeto: [
